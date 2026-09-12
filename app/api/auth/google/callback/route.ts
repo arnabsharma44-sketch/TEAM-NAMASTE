@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const token = await signToken({ userId: user.id, email: user.email });
 
     const response = NextResponse.redirect(new URL('/dashboard', request.url));
-    response.cookies.set('session', token, {
+    response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
