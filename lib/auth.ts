@@ -23,23 +23,16 @@ export async function verifyToken(token: string): Promise<{ userId: string; emai
   }
 }
 
-import { prisma } from './prisma';
-
+/**
+ * Reads and cryptographically verifies the httpOnly JWT cookie.
+ * Returns the authenticated user's identity, or null if unauthenticated.
+ *
+ * SECURITY: Never falls back to any default user. Never queries the database.
+ * The userId returned here is the ONLY value used to scope database queries.
+ */
 export async function getSession(): Promise<{ userId: string; email: string } | null> {
-  // DEV BYPASS: Auto-login
-  let user = await prisma.user.findFirst();
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        email: 'test@example.com',
-        character: {
-          create: {
-            name: 'Test Hero',
-            class: 'Warrior',
-          }
-        }
-      }
-    });
-  }
-  return { userId: user.id, email: user.email };
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  if (!token) return null;
+  return verifyToken(token);
 }

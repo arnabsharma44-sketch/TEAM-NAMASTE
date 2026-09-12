@@ -2,9 +2,9 @@
 // components/layout/AppShell.tsx
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Sword, ShoppingBag, History, Package, LogOut } from 'lucide-react';
+import { LayoutDashboard, Sword, ShoppingBag, History, Package, LogOut, User } from 'lucide-react';
 import { useUIStore } from '@/store/ui';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useCharacterStore } from '@/store/character';
 
@@ -14,6 +14,7 @@ const NAV = [
   { href: '/shop',      label: 'Shop',       icon: ShoppingBag },
   { href: '/history',   label: 'History',    icon: History },
   { href: '/inventory', label: 'Inventory',  icon: Package },
+  { href: '/profile',   label: 'Profile',    icon: User },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const theme = useUIStore((s) => s.theme);
   const setCharacter = useCharacterStore((s) => s.setCharacter);
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['me'],
@@ -46,6 +48,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
+    // Clear ALL cached queries so no previous user's data leaks to the next session
+    queryClient.clear();
+    // Reset Zustand character store
+    setCharacter(null as never);
     router.push('/login');
   }
 

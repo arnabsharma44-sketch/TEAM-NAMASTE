@@ -1,4 +1,5 @@
 // app/api/quests/[id]/route.ts
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSession } from '@/lib/auth';
