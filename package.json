@@ -36,7 +36,6 @@
     "lucide-react": "^1.45.0",
     "next": "^14.2.35",
     "postcss": "^8.5.28",
-    "prisma": "^8.0.0-rc.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.3.3",
@@ -44,6 +43,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "prisma": "^7.10.0",
     "typescript": "5.9.3"
   }
 }
