@@ -69,6 +69,22 @@ model InventoryItem {
   user        User     @relation(fields: [userId], references: [id])
 }
 
-enum Category   { INTELLECT STRENGTH WISDOM CREATIVITY ENDURANCE }
-enum Difficulty { EASY MEDIUM HARD }
-enum Status     { ACTIVE COMPLETED ABANDONED }
+enum Category {
+  INTELLECT
+  STRENGTH
+  WISDOM
+  CREATIVITY
+  ENDURANCE
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
