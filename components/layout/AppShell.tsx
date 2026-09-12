@@ -28,9 +28,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <nav className="sidebar" aria-label="Main navigation">
         <div style={{ marginBottom: 24 }}>
-          <h1 className="font-display" style={{ fontSize: 22, color: 'var(--gold)', letterSpacing: 1 }}>
-            ⚔️ Life RPG
-          </h1>
+          <Link href="/">
+            <h1 className="font-display" style={{ fontSize: 22, color: 'var(--gold)', letterSpacing: 1, cursor: 'pointer' }}>
+              ⚔️ Life RPG
+            </h1>
+          </Link>
         </div>
         {NAV.map(({ href, label, icon: Icon }) => (
           <Link
