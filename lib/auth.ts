@@ -23,9 +23,23 @@ export async function verifyToken(token: string): Promise<{ userId: string; emai
   }
 }
 
+import { prisma } from './prisma';
+
 export async function getSession(): Promise<{ userId: string; email: string } | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  if (!token) return null;
-  return verifyToken(token);
+  // DEV BYPASS: Auto-login
+  let user = await prisma.user.findFirst();
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        email: 'test@example.com',
+        character: {
+          create: {
+            name: 'Test Hero',
+            class: 'Warrior',
+          }
+        }
+      }
+    });
+  }
+  return { userId: user.id, email: user.email };
 }
