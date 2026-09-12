@@ -59,6 +59,7 @@ model QuestLog {
   goldEarned  Int
   attribute   String
   completedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model InventoryItem {
