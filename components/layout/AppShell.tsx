@@ -63,8 +63,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <nav className="sidebar" aria-label="Main navigation">
         <div style={{ marginBottom: 24 }}>
           <Link href="/">
-            <h1 className="font-display" style={{ fontSize: 22, color: 'var(--gold)', letterSpacing: 1, cursor: 'pointer' }}>
-              ⚔️ Life RPG
+            <h1 className="font-display" style={{ fontSize: 20, color: 'var(--gold)', letterSpacing: 1, cursor: 'pointer' }}>
+              ⚔️ Hellfire Quests
             </h1>
           </Link>
         </div>
