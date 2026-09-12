@@ -1,0 +1,74 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  passwordHash String?
+  createdAt    DateTime        @default(now())
+  character    Character?
+  quests       Quest[]
+  questLog     QuestLog[]
+  inventory    InventoryItem[]
+}
+
+model Character {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  name       String
+  class      String
+  level      Int      @default(1)
+  xp         Int      @default(0)
+  gold       Int      @default(0)
+  streak     Int      @default(0)
+  lastActive DateTime @default(now())
+  intellect  Int      @default(1)
+  strength   Int      @default(1)
+  wisdom     Int      @default(1)
+  creativity Int      @default(1)
+  endurance  Int      @default(1)
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Quest {
+  id          String     @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  category    Category
+  difficulty  Difficulty
+  status      Status     @default(ACTIVE)
+  createdAt   DateTime   @default(now())
+  completedAt DateTime?
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model QuestLog {
+  id          String   @id @default(cuid())
+  userId      String
+  questId     String
+  xpEarned    Int
+  goldEarned  Int
+  attribute   String
+  completedAt DateTime @default(now())
+}
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  userId      String
+  itemId      String
+  purchasedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+enum Category   { INTELLECT STRENGTH WISDOM CREATIVITY ENDURANCE }
+enum Difficulty { EASY MEDIUM HARD }
+enum Status     { ACTIVE COMPLETED ABANDONED }
