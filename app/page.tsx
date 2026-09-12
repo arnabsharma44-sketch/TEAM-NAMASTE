@@ -1,8 +1,8 @@
 'use client';
-// app/page.tsx — Stranger Things horror landing page (full version)
+// app/page.tsx — Life RPG Premium Landing Page
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import './home.css';
 
 /* ═══════════════════════════════
@@ -10,144 +10,67 @@ import './home.css';
    ═══════════════════════════════ */
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
+  visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { delay: i * 0.1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
 const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-};
-
-const cardPop = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.45, ease: 'easeOut' },
-  },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 /* ═══════════════════════════════
    DATA
    ═══════════════════════════════ */
 const STATS = [
-  { value: '10K+', label: 'Quests Created' },
-  { value: '5K+', label: 'Heroes Joined' },
-  { value: '50K+', label: 'XP Earned' },
-  { value: '99%', label: 'Survival Rate' },
+  { value: '10K+', label: 'Quests Completed', icon: '⚔️' },
+  { value: '5K+',  label: 'Heroes Joined',    icon: '🧙' },
+  { value: '50K+', label: 'XP Awarded',       icon: '✨' },
+  { value: '99%',  label: 'Survival Rate',    icon: '🛡️' },
 ];
 
 const FEATURES = [
-  {
-    icon: '⚔️',
-    title: 'Quest System',
-    desc: 'Create custom quests from your real-world goals. Assign difficulty, category, and XP rewards. Track progress as you conquer each challenge.',
-  },
-  {
-    icon: '📊',
-    title: 'Character Progression',
-    desc: 'Level up across five core attributes — Intellect, Strength, Wisdom, Creativity, and Endurance. Watch your character grow with every completed task.',
-  },
-  {
-    icon: '🏪',
-    title: 'Reward Shop',
-    desc: 'Spend hard-earned gold on themes, cosmetics, and power-ups. Customize your experience with items unlocked through dedication.',
-  },
-  {
-    icon: '🔥',
-    title: 'Streak Tracking',
-    desc: 'Build daily streaks to earn bonus multipliers. Consistency is rewarded — break the chain and face the consequences.',
-  },
-  {
-    icon: '📜',
-    title: 'Quest History',
-    desc: 'Review your completed adventures. Analyze your patterns, track attribute growth over time, and revisit your greatest victories.',
-  },
-  {
-    icon: '🎒',
-    title: 'Inventory System',
-    desc: 'Collect items, equipment, and trophies. Manage your inventory and equip gear that matches your playstyle.',
-  },
+  { icon: '⚔️', title: 'Quest System',          desc: 'Transform any real-world goal into an epic quest. Assign difficulty, pick your category, and earn XP when you conquer it.' },
+  { icon: '📈', title: 'Character Growth',       desc: 'Level up across five core attributes — Intellect, Strength, Wisdom, Creativity, and Endurance.' },
+  { icon: '🏪', title: 'Reward Shop',            desc: 'Spend hard-earned gold on themes, cosmetics, and power-ups. Make the realm truly yours.' },
+  { icon: '🔥', title: 'Streak Multipliers',     desc: 'Build daily streaks to unlock XP multipliers. Consistency is rewarded.' },
+  { icon: '📜', title: 'Adventure History',      desc: 'Review past victories, analyze growth trends, and relive your greatest achievements.' },
+  { icon: '🎒', title: 'Inventory & Gear',       desc: 'Collect trophies, equipment, and rare items. Equip what suits your playstyle.' },
 ];
 
 const STEPS = [
-  {
-    title: 'Create Your Character',
-    desc: 'Sign up and choose your class — Warrior, Mage, Rogue, or Sage. Each path offers unique strengths for different play styles.',
-  },
-  {
-    title: 'Accept Quests',
-    desc: 'Turn your daily tasks, habits, and goals into quests. Set difficulty levels and assign attribute categories to earn targeted XP.',
-  },
-  {
-    title: 'Complete & Level Up',
-    desc: 'Mark quests as complete to earn XP and Gold. Level up your character, unlock new abilities, and climb the leaderboard.',
-  },
-  {
-    title: 'Spend & Customize',
-    desc: 'Visit the shop to spend your gold on themes, items, and cosmetics. Make the realm truly yours.',
-  },
+  { num: '01', title: 'Choose Your Class',     desc: 'Pick from Warrior, Mage, Rogue, or Sage — each offers a unique lens through which to approach your daily challenges.' },
+  { num: '02', title: 'Create Your Quests',    desc: 'Turn daily habits, goals, and tasks into quests. Set difficulty and category to earn the right kind of XP.' },
+  { num: '03', title: 'Complete & Level Up',   desc: 'Mark quests done in real life, then claim your XP and Gold. Watch your character evolve with every victory.' },
+  { num: '04', title: 'Spend & Customize',     desc: 'Visit the shop to invest your gold into cosmetics, themes, and items that reflect your legend.' },
 ];
 
 const CLASSES = [
-  { emoji: '⚔️', name: 'Warrior', desc: 'Strength & discipline' },
-  { emoji: '🔮', name: 'Mage', desc: 'Intellect & wisdom' },
-  { emoji: '🗡️', name: 'Rogue', desc: 'Speed & creativity' },
-  { emoji: '📜', name: 'Sage', desc: 'Balance & endurance' },
+  { emoji: '⚔️', name: 'Warrior', sub: 'Strength · Discipline',  color: '#e05555', glow: 'rgba(224,85,85,0.25)' },
+  { emoji: '🔮', name: 'Mage',    sub: 'Intellect · Wisdom',     color: '#9d82e0', glow: 'rgba(157,130,224,0.25)' },
+  { emoji: '🗡️', name: 'Rogue',   sub: 'Speed · Creativity',     color: '#55d0a0', glow: 'rgba(85,208,160,0.25)' },
+  { emoji: '📜', name: 'Sage',    sub: 'Balance · Endurance',    color: '#f0c060', glow: 'rgba(240,192,96,0.25)' },
 ];
 
 const FAQS = [
-  {
-    q: 'What is Life RPG?',
-    a: 'Life RPG is a gamified productivity platform that transforms your real-world tasks, habits, and goals into an RPG adventure. Complete quests, earn XP, level up your character, and buy rewards with gold — all by doing things that matter in your real life.',
-  },
-  {
-    q: 'Is it free to use?',
-    a: 'Yes! Life RPG is completely free. Create your character, complete quests, and earn rewards without any cost. Premium cosmetic items may be available in the future.',
-  },
-  {
-    q: 'How does the quest system work?',
-    a: 'You create quests from your real tasks — like "Read for 30 minutes" or "Go for a run." Assign a difficulty (Easy, Medium, Hard) and a category (Intellect, Strength, Wisdom, Creativity, Endurance). When you complete the task in real life, mark it done to earn XP and Gold.',
-  },
-  {
-    q: 'Can I use it with a team?',
-    a: 'Team features are being developed. Soon you will be able to form parties, share quests, and compete on leaderboards with friends.',
-  },
-  {
-    q: 'What happens if I break my streak?',
-    a: 'Your streak counter resets, but your character progress, level, and gold are never lost. Streaks provide bonus multipliers — they reward consistency but don\'t punish you permanently.',
-  },
+  { q: 'What is Life RPG?', a: 'Life RPG is a gamified productivity platform that turns your real-world tasks, habits, and goals into an RPG adventure. Complete quests, earn XP, level up your character, and buy rewards with gold.' },
+  { q: 'Is it free to use?', a: 'Yes! Life RPG is completely free. Create your character, complete quests, and earn rewards without any cost. Premium cosmetic items may arrive in the future.' },
+  { q: 'How does the quest system work?', a: 'Create quests from your real tasks — "Read for 30 minutes", "Go for a run." Assign difficulty and category. Complete the task in real life, then claim your XP and Gold.' },
+  { q: 'Can I use it with a team?', a: 'Team features are in development. Soon you\'ll form parties, share quests, and compete on leaderboards with friends.' },
+  { q: 'What if I break my streak?', a: 'Your streak resets, but your character progress, level, and gold are never lost. Streaks multiply XP — they reward consistency, never punish you permanently.' },
 ];
 
 /* ═══════════════════════════════
-   HELPER COMPONENTS
+   SUB-COMPONENTS
    ═══════════════════════════════ */
-function RevealSection({
-  children,
-  className,
-  id,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  id?: string;
-}) {
+function Section({ children, id, className }: { children: React.ReactNode; id?: string; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
-
+  const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
-    <motion.div
-      ref={ref}
-      id={id}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={stagger}
-      className={className}
-    >
+    <motion.div ref={ref} id={id} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={stagger} className={className}>
       {children}
     </motion.div>
   );
@@ -155,27 +78,16 @@ function RevealSection({
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
-
   return (
-    <div className="horror-faq-item">
-      <button
-        className="horror-faq-question"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        {q}
-        <span className={`horror-faq-chevron${open ? ' open' : ''}`}>▼</span>
+    <div className="hp-faq-item">
+      <button className="hp-faq-btn" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span>{q}</span>
+        <span className={`hp-faq-icon${open ? ' open' : ''}`}>+</span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
-          >
-            <p className="horror-faq-answer">{a}</p>
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }} style={{ overflow: 'hidden' }}>
+            <p className="hp-faq-answer">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -184,16 +96,17 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 /* ═══════════════════════════════
-   MAIN PAGE COMPONENT
+   MAIN COMPONENT
    ═══════════════════════════════ */
 export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 40);
-  }, []);
-
+  const handleScroll = useCallback(() => setScrolled(window.scrollY > 50), []);
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -205,301 +118,254 @@ export default function HomePage() {
   }
 
   return (
-    <div className="horror-page">
-      {/* ── Ambient layers ── */}
-      <div className="horror-scanlines" aria-hidden="true" />
-      <div className="horror-fog" aria-hidden="true">
-        <div className="fog-particle" />
-        <div className="fog-particle" />
-        <div className="fog-particle" />
-        <div className="fog-particle" />
-      </div>
-      <div className="horror-embers" aria-hidden="true">
-        <div className="ember" />
-        <div className="ember" />
-        <div className="ember" />
-        <div className="ember" />
-        <div className="ember" />
-        <div className="ember" />
-      </div>
+    <div className="hp-page">
+      {/* ── Decorative background orbs ── */}
+      <div className="hp-orb hp-orb-1" aria-hidden />
+      <div className="hp-orb hp-orb-2" aria-hidden />
+      <div className="hp-orb hp-orb-3" aria-hidden />
+      <div className="hp-grid-overlay" aria-hidden />
 
-      {/* ═══════════ NAVBAR ═══════════ */}
-      <nav className={`horror-nav${scrolled ? ' scrolled' : ''}`}>
-        <a href="#" className="horror-nav-logo">Life RPG</a>
+      {/* ══════════════════ NAVBAR ══════════════════ */}
+      <nav className={`hp-nav${scrolled ? ' scrolled' : ''}`} role="navigation" aria-label="Main navigation">
+        <a href="#" className="hp-nav-logo" aria-label="Life RPG home">
+          <span className="hp-nav-logo-icon">⚔️</span>
+          <span>Life RPG</span>
+        </a>
 
-        <button
-          className="horror-menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? '✕' : '☰'}
+        <button className="hp-menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen}>
+          <span /><span /><span />
         </button>
 
-        <ul className={`horror-nav-links${menuOpen ? ' open' : ''}`}>
-          <li><button className="horror-nav-link" onClick={() => scrollTo('features')}>Features</button></li>
-          <li><button className="horror-nav-link" onClick={() => scrollTo('how-it-works')}>How It Works</button></li>
-          <li><button className="horror-nav-link" onClick={() => scrollTo('classes')}>Classes</button></li>
-          <li><button className="horror-nav-link" onClick={() => scrollTo('faq')}>FAQ</button></li>
-          <li><Link href="/login" className="horror-nav-cta">Enter Realm</Link></li>
+        <ul className={`hp-nav-links${menuOpen ? ' open' : ''}`} role="list">
+          {['features', 'how-it-works', 'classes', 'faq'].map((id) => (
+            <li key={id}>
+              <button className="hp-nav-link" onClick={() => scrollTo(id)} id={`nav-${id}`}>
+                {id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+              </button>
+            </li>
+          ))}
+          <li><Link href="/login" className="hp-nav-ghost" id="nav-login">Sign In</Link></li>
+          <li><Link href="/signup" className="hp-nav-cta" id="nav-signup">Start for Free</Link></li>
         </ul>
       </nav>
 
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="horror-hero">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <h1 className="horror-title">LIFE RPG</h1>
+      {/* ══════════════════ HERO ══════════════════ */}
+      <section className="hp-hero" ref={heroRef}>
+        <motion.div className="hp-hero-inner" style={{ y: heroY, opacity: heroOpacity }}>
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+            <div className="hp-hero-badge">🎮 Your Life. Your Legend.</div>
+          </motion.div>
+
+          <motion.h1 className="hp-hero-title" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+            Turn Every Task Into<br />
+            <span className="hp-hero-gradient">An Epic Quest</span>
+          </motion.h1>
+
+          <motion.p className="hp-hero-desc" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.7 }}>
+            Life RPG transforms your daily habits, goals, and tasks into a thrilling RPG adventure.
+            Build your character, earn XP, collect gold, and level up — one real-world quest at a time.
+          </motion.p>
+
+          <motion.div className="hp-hero-actions" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.6 }}>
+            <Link href="/signup" className="hp-btn-primary" id="hero-cta-start">
+              <span>Begin Your Adventure</span>
+              <span aria-hidden>→</span>
+            </Link>
+            <Link href="/login" className="hp-btn-ghost" id="hero-cta-login">
+              I Already Have an Account
+            </Link>
+          </motion.div>
+
+          <motion.div className="hp-hero-social-proof" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.6 }}>
+            <div className="hp-avatars" aria-hidden>
+              {['⚔️', '🔮', '🗡️', '📜', '🧙'].map((e, i) => (
+                <div key={i} className="hp-avatar">{e}</div>
+              ))}
+            </div>
+            <p><strong>5,000+ heroes</strong> have already joined the realm</p>
+          </motion.div>
         </motion.div>
 
+        {/* Animated hero card mockup */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
+          className="hp-hero-card"
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          aria-hidden
         >
-          <div className="horror-divider" />
+          <div className="hp-hero-card-header">
+            <span className="hp-hero-card-dot red" /><span className="hp-hero-card-dot yellow" /><span className="hp-hero-card-dot green" />
+            <span style={{ marginLeft: 8, fontSize: 13, color: 'var(--hp-text-dim)' }}>Character Panel</span>
+          </div>
+          <div className="hp-hero-card-body">
+            <div className="hp-card-avatar">🧙</div>
+            <div className="hp-card-name">Jinendra</div>
+            <div className="hp-card-class">Mage · Level 12</div>
+            <div className="hp-xp-section">
+              <div className="hp-xp-label"><span>XP</span><span>2400 / 3000</span></div>
+              <div className="hp-xp-track"><motion.div className="hp-xp-fill" initial={{ width: 0 }} animate={{ width: '80%' }} transition={{ delay: 1.2, duration: 1.2, ease: 'easeOut' }} /></div>
+            </div>
+            <div className="hp-card-stats">
+              {[['INT', '9', '#9d82e0'], ['STR', '4', '#e05555'], ['WIS', '8', '#55d0a0'], ['CRE', '7', '#f0c060']].map(([label, val, color]) => (
+                <div key={label} className="hp-card-stat" style={{ '--stat-color': color } as React.CSSProperties}>
+                  <div className="hp-card-stat-val">{val}</div>
+                  <div className="hp-card-stat-label">{label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="hp-card-quests">
+              {[
+                { t: 'Read 30 mins', d: 'EASY', done: true },
+                { t: 'Workout session', d: 'HARD', done: true },
+                { t: 'Learn Next.js', d: 'MEDIUM', done: false },
+              ].map(q => (
+                <div key={q.t} className={`hp-quest-row${q.done ? ' done' : ''}`}>
+                  <span className="hp-quest-check">{q.done ? '✓' : '○'}</span>
+                  <span className="hp-quest-title">{q.t}</span>
+                  <span className={`hp-quest-diff ${q.d.toLowerCase()}`}>{q.d}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
-        <motion.p
-          className="horror-subtitle"
-          data-text="Gamify Your Reality"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-        >
-          Gamify Your Reality
-        </motion.p>
-
-        <motion.p
-          className="horror-hero-desc"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0, duration: 0.5 }}
-        >
-          Transform your daily tasks into epic quests. Build your character, level up your attributes,
-          earn gold, and conquer the challenges of the real world — one quest at a time.
-        </motion.p>
-
-        <motion.div
-          className="horror-hero-buttons"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-        >
-          <Link href="/signup" className="horror-cta" id="hero-cta-signup">
-            Create Character
-          </Link>
-          <Link href="/login" className="horror-cta-ghost" id="hero-cta-login">
-            Sign In
-          </Link>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4, y: [0, 8, 0] }}
-          transition={{ delay: 2, duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ position: 'absolute', bottom: 40, fontSize: 22, color: 'var(--horror-text-dim)' }}
-          aria-hidden="true"
-        >
-          ▼
-        </motion.div>
+        {/* scroll caret */}
+        <motion.div className="hp-scroll-caret" initial={{ opacity: 0 }} animate={{ opacity: 1, y: [0, 8, 0] }} transition={{ delay: 2, duration: 2, repeat: Infinity }} aria-hidden>↓</motion.div>
       </section>
 
-      {/* ═══════════ STATS BAR ═══════════ */}
-      <RevealSection className="horror-stats">
-        <div className="horror-stats-grid">
-          {STATS.map((s, i) => (
-            <motion.div key={s.label} variants={fadeUp} custom={i} style={{ textAlign: 'center' }}>
-              <div className="horror-stat-number">{s.value}</div>
-              <div className="horror-stat-label">{s.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </RevealSection>
+      {/* ══════════════════ STATS ══════════════════ */}
+      <Section className="hp-stats-bar">
+        {STATS.map((s, i) => (
+          <motion.div key={s.label} variants={fadeUp} custom={i} className="hp-stat">
+            <span className="hp-stat-icon" aria-hidden>{s.icon}</span>
+            <div className="hp-stat-val">{s.value}</div>
+            <div className="hp-stat-label">{s.label}</div>
+          </motion.div>
+        ))}
+      </Section>
 
-      {/* ═══════════ FEATURES ═══════════ */}
-      <RevealSection className="horror-section" id="features">
-        <div className="horror-section-header">
-          <motion.span variants={fadeUp} custom={0} className="horror-section-label">
-            Features
-          </motion.span>
-          <motion.h2 variants={fadeUp} custom={1} className="horror-section-title">
-            Everything You Need to Level Up
-          </motion.h2>
-          <motion.p variants={fadeUp} custom={2} className="horror-section-desc">
-            A complete RPG system built around your real life. Every feature is designed to make
-            productivity feel rewarding and addictive.
-          </motion.p>
+      {/* ══════════════════ FEATURES ══════════════════ */}
+      <Section id="features" className="hp-section">
+        <div className="hp-section-label-row">
+          <motion.span variants={fadeUp} custom={0} className="hp-label-chip">Features</motion.span>
         </div>
-
-        <div className="horror-features-grid">
+        <motion.h2 variants={fadeUp} custom={1} className="hp-section-title">Everything You Need to Level Up</motion.h2>
+        <motion.p variants={fadeUp} custom={2} className="hp-section-desc">
+          A complete RPG system built around your real life. Every feature is designed to make productivity feel rewarding and addictive.
+        </motion.p>
+        <div className="hp-features-grid">
           {FEATURES.map((f, i) => (
-            <motion.div key={f.title} variants={cardPop} custom={i} className="horror-feature-card">
-              <div className="horror-feature-icon" aria-hidden="true">{f.icon}</div>
-              <h3 className="horror-feature-title">{f.title}</h3>
-              <p className="horror-feature-desc">{f.desc}</p>
+            <motion.div key={f.title} variants={fadeUp} custom={i} className="hp-feature-card">
+              <div className="hp-feature-icon" aria-hidden>{f.icon}</div>
+              <h3 className="hp-feature-title">{f.title}</h3>
+              <p className="hp-feature-desc">{f.desc}</p>
             </motion.div>
           ))}
         </div>
-      </RevealSection>
+      </Section>
 
-      {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <RevealSection className="horror-section" id="how-it-works">
-        <div className="horror-section-header">
-          <motion.span variants={fadeUp} custom={0} className="horror-section-label">
-            How It Works
-          </motion.span>
-          <motion.h2 variants={fadeUp} custom={1} className="horror-section-title">
-            Your Journey Begins Here
-          </motion.h2>
-          <motion.p variants={fadeUp} custom={2} className="horror-section-desc">
-            Four simple steps to transform your everyday routine into an RPG adventure.
-          </motion.p>
+      {/* ══════════════════ HOW IT WORKS ══════════════════ */}
+      <Section id="how-it-works" className="hp-section hp-section-alt">
+        <div className="hp-section-label-row">
+          <motion.span variants={fadeUp} custom={0} className="hp-label-chip">How It Works</motion.span>
         </div>
+        <motion.h2 variants={fadeUp} custom={1} className="hp-section-title">Four Steps to Your Legend</motion.h2>
+        <motion.p variants={fadeUp} custom={2} className="hp-section-desc">Simple to start. Deeply satisfying to master.</motion.p>
 
-        <div className="horror-steps">
-          {STEPS.map((step, i) => (
-            <motion.div key={step.title} variants={fadeUp} custom={i} className="horror-step">
-              <div className="horror-step-number">{i + 1}</div>
-              <div className="horror-step-content">
-                <h3 className="horror-step-title">{step.title}</h3>
-                <p className="horror-step-desc">{step.desc}</p>
+        <div className="hp-steps">
+          {STEPS.map((s, i) => (
+            <motion.div key={s.num} variants={fadeUp} custom={i} className="hp-step">
+              <div className="hp-step-num">{s.num}</div>
+              <div className="hp-step-line" aria-hidden />
+              <div className="hp-step-content">
+                <h3 className="hp-step-title">{s.title}</h3>
+                <p className="hp-step-desc">{s.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
-      </RevealSection>
+      </Section>
 
-      {/* ═══════════ CHARACTER CLASSES ═══════════ */}
-      <RevealSection className="horror-section" id="classes">
-        <div className="horror-section-header">
-          <motion.span variants={fadeUp} custom={0} className="horror-section-label">
-            Choose Your Path
-          </motion.span>
-          <motion.h2 variants={fadeUp} custom={1} className="horror-section-title">
-            Character Classes
-          </motion.h2>
-          <motion.p variants={fadeUp} custom={2} className="horror-section-desc">
-            Each class shapes how you approach quests. Pick the path that fits your playstyle.
-          </motion.p>
+      {/* ══════════════════ CLASSES ══════════════════ */}
+      <Section id="classes" className="hp-section">
+        <div className="hp-section-label-row">
+          <motion.span variants={fadeUp} custom={0} className="hp-label-chip">Choose Your Path</motion.span>
         </div>
+        <motion.h2 variants={fadeUp} custom={1} className="hp-section-title">Character Classes</motion.h2>
+        <motion.p variants={fadeUp} custom={2} className="hp-section-desc">Each class shapes how you approach quests. Pick the path that fits your playstyle.</motion.p>
 
-        <div className="horror-classes-grid">
+        <div className="hp-classes-grid">
           {CLASSES.map((cls, i) => (
-            <motion.div key={cls.name} variants={cardPop} custom={i} className="horror-class-card">
-              <span className="horror-class-emoji" aria-hidden="true">{cls.emoji}</span>
-              <h3 className="horror-class-name">{cls.name}</h3>
-              <p className="horror-class-desc">{cls.desc}</p>
+            <motion.div key={cls.name} variants={fadeUp} custom={i} className="hp-class-card" style={{ '--cls-color': cls.color, '--cls-glow': cls.glow } as React.CSSProperties}>
+              <div className="hp-class-emoji" aria-hidden>{cls.emoji}</div>
+              <h3 className="hp-class-name">{cls.name}</h3>
+              <p className="hp-class-sub">{cls.sub}</p>
             </motion.div>
           ))}
         </div>
-      </RevealSection>
+      </Section>
 
-      {/* ═══════════ FAQ ═══════════ */}
-      <RevealSection className="horror-section" id="faq">
-        <div className="horror-section-header">
-          <motion.span variants={fadeUp} custom={0} className="horror-section-label">
-            FAQ
-          </motion.span>
-          <motion.h2 variants={fadeUp} custom={1} className="horror-section-title">
-            Frequently Asked Questions
-          </motion.h2>
+      {/* ══════════════════ FAQ ══════════════════ */}
+      <Section id="faq" className="hp-section hp-section-alt">
+        <div className="hp-section-label-row">
+          <motion.span variants={fadeUp} custom={0} className="hp-label-chip">FAQ</motion.span>
         </div>
-
-        <motion.div variants={fadeUp} custom={2} className="horror-faq-list">
-          {FAQS.map((faq) => (
-            <FAQItem key={faq.q} q={faq.q} a={faq.a} />
-          ))}
+        <motion.h2 variants={fadeUp} custom={1} className="hp-section-title">Frequently Asked Questions</motion.h2>
+        <motion.div variants={fadeUp} custom={2} className="hp-faq-list">
+          {FAQS.map(f => <FAQItem key={f.q} {...f} />)}
         </motion.div>
-      </RevealSection>
+      </Section>
 
-      {/* ═══════════ PORTAL CTA ═══════════ */}
-      <RevealSection className="horror-portal-section">
-        <motion.div variants={fadeUp} custom={0} className="horror-portal-wrapper">
-          <div className="horror-portal-ring" />
-          <div className="horror-portal-ring-inner" />
-          <div className="horror-portal-glow" />
-          <span
-            style={{
-              position: 'relative',
-              zIndex: 1,
-              fontSize: 44,
-              filter: 'drop-shadow(0 0 12px rgba(224, 0, 32, 0.5))',
-            }}
-            aria-hidden="true"
-          >
-            🌀
-          </span>
-        </motion.div>
-
-        <motion.h2 variants={fadeUp} custom={1} className="horror-portal-heading">
-          Ready to Begin Your Adventure?
-        </motion.h2>
-
-        <motion.p variants={fadeUp} custom={2} className="horror-portal-tagline">
-          Join thousands of heroes who have turned their daily grind into an epic journey.
-          Your character is waiting to be created.
+      {/* ══════════════════ FINAL CTA ══════════════════ */}
+      <Section className="hp-cta-section">
+        <div className="hp-cta-glow" aria-hidden />
+        <motion.div variants={fadeUp} custom={0} className="hp-cta-badge">⚔️ Your Quest Awaits</motion.div>
+        <motion.h2 variants={fadeUp} custom={1} className="hp-cta-title">Ready to Begin Your Adventure?</motion.h2>
+        <motion.p variants={fadeUp} custom={2} className="hp-cta-desc">
+          Join thousands of heroes who have turned their daily grind into an epic journey. Your character is waiting to be created.
         </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          custom={3}
-          style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}
-        >
-          <Link href="/signup" className="horror-cta" id="portal-cta-signup">
-            Create Your Character
-          </Link>
-          <Link href="/login" className="horror-cta-ghost" id="portal-cta-login">
-            I Already Have an Account
-          </Link>
+        <motion.div variants={fadeUp} custom={3} className="hp-cta-actions">
+          <Link href="/signup" className="hp-btn-primary" id="cta-final-signup">Create Your Character</Link>
+          <Link href="/login" className="hp-btn-ghost" id="cta-final-login">I Already Have an Account</Link>
         </motion.div>
-      </RevealSection>
+      </Section>
 
-      {/* ═══════════ FOOTER ═══════════ */}
-      <footer className="horror-footer">
-        <div className="horror-footer-inner">
-          <div className="horror-footer-grid">
-            <div>
-              <div className="horror-footer-brand">Life RPG</div>
-              <p className="horror-footer-about">
-                A gamified productivity platform that transforms your real-world tasks into an RPG
-                adventure. Built by Team Namaste.
-              </p>
+      {/* ══════════════════ FOOTER ══════════════════ */}
+      <footer className="hp-footer">
+        <div className="hp-footer-inner">
+          <div className="hp-footer-top">
+            <div className="hp-footer-brand">
+              <span className="hp-footer-logo">⚔️ Life RPG</span>
+              <p className="hp-footer-about">A gamified productivity platform that transforms your real-world tasks into an RPG adventure. Built by Team Namaste.</p>
             </div>
-
-            <div>
-              <h4 className="horror-footer-col-title">Product</h4>
-              <ul className="horror-footer-links">
-                <li><button className="horror-footer-link" onClick={() => scrollTo('features')}>Features</button></li>
-                <li><button className="horror-footer-link" onClick={() => scrollTo('how-it-works')}>How It Works</button></li>
-                <li><button className="horror-footer-link" onClick={() => scrollTo('classes')}>Classes</button></li>
-                <li><button className="horror-footer-link" onClick={() => scrollTo('faq')}>FAQ</button></li>
+            <div className="hp-footer-links-col">
+              <h4>Product</h4>
+              <ul>
+                {['features', 'how-it-works', 'classes', 'faq'].map(id => (
+                  <li key={id}><button onClick={() => scrollTo(id)} id={`footer-${id}`}>{id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</button></li>
+                ))}
               </ul>
             </div>
-
-            <div>
-              <h4 className="horror-footer-col-title">Account</h4>
-              <ul className="horror-footer-links">
-                <li><Link href="/login" className="horror-footer-link">Sign In</Link></li>
-                <li><Link href="/signup" className="horror-footer-link">Create Character</Link></li>
-                <li><Link href="/dashboard" className="horror-footer-link">Dashboard</Link></li>
+            <div className="hp-footer-links-col">
+              <h4>Account</h4>
+              <ul>
+                <li><Link href="/login">Sign In</Link></li>
+                <li><Link href="/signup">Create Character</Link></li>
+                <li><Link href="/dashboard">Dashboard</Link></li>
               </ul>
             </div>
-
-            <div>
-              <h4 className="horror-footer-col-title">Resources</h4>
-              <ul className="horror-footer-links">
-                <li><a href="https://github.com/jinendrabanthia/TEAM-NAMASTE" target="_blank" rel="noopener noreferrer" className="horror-footer-link">GitHub</a></li>
-                <li><a href="https://github.com/jinendrabanthia/TEAM-NAMASTE/issues" target="_blank" rel="noopener noreferrer" className="horror-footer-link">Report a Bug</a></li>
+            <div className="hp-footer-links-col">
+              <h4>Links</h4>
+              <ul>
+                <li><a href="https://github.com/jinendrabanthia/TEAM-NAMASTE" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                <li><a href="https://github.com/jinendrabanthia/TEAM-NAMASTE/issues" target="_blank" rel="noopener noreferrer">Report a Bug</a></li>
               </ul>
             </div>
           </div>
-
-          <div className="horror-footer-bottom">
-            <span>&copy; {new Date().getFullYear()} Life RPG — All souls reserved.</span>
-            <span>Built by Team Namaste</span>
+          <div className="hp-footer-bottom">
+            <span>© {new Date().getFullYear()} Life RPG — All rights reserved.</span>
+            <span>Built with ❤️ by Team Namaste</span>
           </div>
         </div>
       </footer>
