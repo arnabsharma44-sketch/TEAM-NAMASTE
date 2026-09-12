@@ -68,17 +68,6 @@ export async function GET(request: NextRequest) {
       user = await prisma.user.create({
         data: {
           email,
-          character: {
-            create: {
-              name: name,
-              class: 'NOVICE',
-              intellect: 1,
-              strength: 1,
-              wisdom: 1,
-              creativity: 1,
-              endurance: 1,
-            },
-          },
         },
       });
     }

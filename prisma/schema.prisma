@@ -47,6 +47,8 @@ model Quest {
   createdAt   DateTime   @default(now())
   completedAt DateTime?
   user        User       @relation(fields: [userId], references: [id])
+
+  @@index([userId, status, createdAt(sort: Desc)])
 }
 
 model QuestLog {
@@ -58,6 +60,8 @@ model QuestLog {
   attribute   String
   completedAt DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, completedAt(sort: Desc)])
 }
 
 model InventoryItem {
@@ -66,6 +70,9 @@ model InventoryItem {
   itemId      String
   purchasedAt DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, itemId])
+  @@index([userId, purchasedAt(sort: Desc)])
 }
 
 enum Category {

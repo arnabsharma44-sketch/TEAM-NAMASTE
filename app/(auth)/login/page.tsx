@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -50,12 +52,22 @@ export default function LoginPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label htmlFor="email" style={{ fontSize: 13, color: 'var(--text-dim)', fontWeight: 600 }}>Email</label>
-            <input id="email" className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="hero@realm.com" style={{ marginTop: 6 }} autoComplete="email" />
+            <input id="email" className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email" style={{ marginTop: 6 }} autoComplete="off" />
           </div>
           <div>
             <label htmlFor="password" style={{ fontSize: 13, color: 'var(--text-dim)', fontWeight: 600 }}>Password</label>
-            <input id="password" className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={{ marginTop: 6 }} autoComplete="current-password"
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+            <div style={{ position: 'relative', marginTop: 6 }}>
+              <input id="password" className="input" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" style={{ width: '100%', paddingRight: 40 }} autoComplete="new-password"
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
         </div>
 

@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Sword, ShoppingBag, History, Package, LogOut } from 'lucide-react';
 import { useUIStore } from '@/store/ui';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useCharacterStore } from '@/store/character';
 
 const NAV = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -17,6 +20,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const theme = useUIStore((s) => s.theme);
+  const setCharacter = useCharacterStore((s) => s.setCharacter);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['me'],
+    queryFn: async () => {
+      const res = await fetch('/api/me');
+      if (res.status === 401) { router.push('/login'); return null; }
+      if (!res.ok) throw new Error('Failed to load');
+      return res.json();
+    },
+  });
+
+  useEffect(() => {
+    if (data?.character) setCharacter(data.character);
+  }, [data, setCharacter]);
+
+  useEffect(() => {
+    if (!isLoading && data && !data.character && pathname !== '/onboarding') {
+      router.push('/onboarding');
+    }
+  }, [isLoading, data, pathname, router]);
+
+  const isOnboarding = pathname === '/onboarding';
 
   async function logout() {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -25,6 +51,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-shell" data-theme={theme}>
+      {!isOnboarding && (
+        <>
       {/* Desktop sidebar */}
       <nav className="sidebar" aria-label="Main navigation">
         <div style={{ marginBottom: 24 }}>
@@ -76,6 +104,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
         ))}
       </nav>
+        </>
+      )}
 
       <main className="main-content">{children}</main>
     </div>
