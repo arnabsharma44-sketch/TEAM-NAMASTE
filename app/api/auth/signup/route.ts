@@ -9,8 +9,6 @@ import { cookies } from 'next/headers';
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  characterName: z.string().min(1).max(30),
-  characterClass: z.enum(['Warrior', 'Mage', 'Rogue', 'Sage']),
 });
 
 export async function POST(req: Request) {
@@ -19,7 +17,7 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: 'Invalid input', code: 'VALIDATION_ERROR' }, { status: 400 });
   }
-  const { email, password, characterName, characterClass } = parsed.data;
+  const { email, password } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
@@ -31,16 +29,12 @@ export async function POST(req: Request) {
     data: {
       email,
       passwordHash,
-      character: {
-        create: { name: characterName, class: characterClass },
-      },
     },
-    include: { character: true },
   });
 
   const token = await signToken({ userId: user.id, email: user.email });
   const cookieStore = await cookies();
   cookieStore.set('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 7 });
 
-  return NextResponse.json({ character: user.character }, { status: 201 });
+  return NextResponse.json({ success: true }, { status: 201 });
 }

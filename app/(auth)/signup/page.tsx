@@ -5,15 +5,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-const CLASSES = ['Warrior', 'Mage', 'Rogue', 'Sage'] as const;
-const CLASS_ICONS: Record<string, string> = { Warrior: '⚔️', Mage: '🔮', Rogue: '🗡️', Sage: '📜' };
+
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [characterName, setCharacterName] = useState('');
-  const [characterClass, setCharacterClass] = useState<typeof CLASSES[number]>('Warrior');
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +23,7 @@ export default function SignupPage() {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, characterName, characterClass }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? 'Signup failed'); return; }
@@ -62,36 +60,10 @@ export default function SignupPage() {
             <label htmlFor="signup-password" style={{ fontSize: 13, color: 'var(--text-dim)', fontWeight: 600 }}>Password (min 8 chars)</label>
             <input id="signup-password" className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={{ marginTop: 6 }} autoComplete="new-password" />
           </div>
-          <div>
-            <label htmlFor="char-name" style={{ fontSize: 13, color: 'var(--text-dim)', fontWeight: 600 }}>Character Name</label>
-            <input id="char-name" className="input" type="text" value={characterName} onChange={(e) => setCharacterName(e.target.value)} placeholder="Aldric the Bold" style={{ marginTop: 6 }} maxLength={30} />
-          </div>
-          <div>
-            <p style={{ fontSize: 13, color: 'var(--text-dim)', fontWeight: 600, marginBottom: 8 }}>Choose Your Class</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {CLASSES.map((cls) => (
-                <button
-                  key={cls}
-                  onClick={() => setCharacterClass(cls)}
-                  aria-pressed={characterClass === cls}
-                  style={{
-                    padding: '12px 8px', borderRadius: 10, textAlign: 'center',
-                    border: `2px solid ${characterClass === cls ? 'var(--indigo-light)' : 'var(--border)'}`,
-                    background: characterClass === cls ? 'var(--bg3)' : 'transparent',
-                    transition: 'border-color 0.15s, background 0.15s',
-                    cursor: 'pointer', color: 'var(--text)',
-                  }}
-                >
-                  <div style={{ fontSize: 28 }}>{CLASS_ICONS[cls]}</div>
-                  <div style={{ fontWeight: 600, marginTop: 4, fontSize: 14 }}>{cls}</div>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
-        <button className="btn btn-primary" onClick={handleSignup} disabled={loading || !characterName.trim()} style={{ width: '100%', justifyContent: 'center' }}>
-          {loading ? 'Forging destiny...' : 'Begin Your Quest'}
+        <button className="btn btn-primary" onClick={handleSignup} disabled={loading || !email || password.length < 8} style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}>
+          {loading ? 'Forging destiny...' : 'Sign Up'}
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', margin: '8px 0' }}>
