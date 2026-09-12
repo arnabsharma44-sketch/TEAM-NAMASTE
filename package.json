@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate"
   },
   "repository": {
     "type": "git",
@@ -19,12 +24,24 @@
   },
   "homepage": "https://github.com/jinendrabanthia/TEAM-NAMASTE#readme",
   "dependencies": {
+    "@prisma/client": "^7.10.0",
+    "@tanstack/react-query": "^5.102.8",
     "@types/node": "^22.20.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.5.6",
+    "bcryptjs": "^3.0.3",
+    "framer-motion": "^13.2.0",
+    "jose": "^6.2.12",
+    "lucide-react": "^1.45.0",
     "next": "^14.2.35",
+    "postcss": "^8.5.28",
+    "prisma": "^8.0.0-rc.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^7.0.2"
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.2",
+    "zustand": "^5.0.15"
   }
 }
