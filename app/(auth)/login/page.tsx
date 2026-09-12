@@ -79,10 +79,6 @@ export default function LoginPage() {
           Continue with Google
         </a>
 
-        <button className="btn btn-primary" onClick={handleLogin} disabled={loading} style={{ width: '100%', justifyContent: 'center' }}>
-          {loading ? 'Entering realm...' : 'Begin Adventure'}
-        </button>
-
         <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-dim)' }}>
           New hero?{' '}<Link href="/signup" style={{ color: 'var(--indigo-light)', fontWeight: 600 }}>Create Character</Link>
         </p>
