@@ -96,8 +96,8 @@ export async function GET(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Google OAuth error:', error);
-    return NextResponse.redirect(new URL('/login?error=InternalError', request.url));
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
 }
