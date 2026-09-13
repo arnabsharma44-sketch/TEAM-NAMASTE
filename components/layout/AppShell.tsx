@@ -9,12 +9,12 @@ import { useEffect } from 'react';
 import { useCharacterStore } from '@/store/character';
 
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/quests',    label: 'Quests',     icon: Sword },
-  { href: '/shop',      label: 'Shop',       icon: ShoppingBag },
-  { href: '/history',   label: 'History',    icon: History },
-  { href: '/inventory', label: 'Inventory',  icon: Package },
-  { href: '/profile',   label: 'Profile',    icon: User },
+  { href: '/dashboard', label: 'Player Sheet', icon: LayoutDashboard },
+  { href: '/quests',    label: 'Campaigns',    icon: Sword },
+  { href: '/shop',      label: 'Starcourt Mall',icon: ShoppingBag },
+  { href: '/history',   label: 'Hawkins Logs', icon: History },
+  { href: '/inventory', label: 'The Backpack', icon: Package },
+  { href: '/profile',   label: 'Party Profile',icon: User },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {

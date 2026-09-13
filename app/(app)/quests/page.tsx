@@ -157,9 +157,19 @@ export default function QuestsPage() {
 
         {isLoading && <LoadingSkeleton rows={3} height={130} />}
         {!isLoading && quests.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-dim)' }}>
-            <p style={{ fontSize: 40 }}>⚔️</p>
-            <p style={{ marginTop: 12 }}>No active quests. Create one to begin your journey!</p>
+          <div className="card" style={{ textAlign: 'center', padding: 64, color: 'var(--text-dim)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+              <svg className="neon-flicker" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ width: 80, height: 80, filter: 'drop-shadow(0 0 10px var(--indigo))' }}>
+                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
+                <polygon points="12 22 7 12 17 12 12 22" />
+                <polygon points="12 2 7 12 17 12 12 2" />
+                <line x1="2" y1="8.5" x2="7" y2="12" />
+                <line x1="2" y1="15.5" x2="7" y2="12" />
+                <line x1="22" y1="8.5" x2="17" y2="12" />
+                <line x1="22" y1="15.5" x2="17" y2="12" />
+              </svg>
+            </div>
+            <p style={{ fontFamily: 'VT323, monospace', fontSize: 20 }}>NO ACTIVE CAMPAIGNS. ROLL INITIATIVE!</p>
           </div>
         )}
 

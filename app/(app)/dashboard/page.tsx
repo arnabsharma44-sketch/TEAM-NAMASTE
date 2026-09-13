@@ -11,9 +11,50 @@ import { useCharacterStore } from '@/store/character';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const STAT_ICONS: Record<string, string> = {
-  intellect: '🧠', strength: '💪', wisdom: '🦉', creativity: '🎨', endurance: '🏃',
+// D&D SVG Line-art icons
+const Icons = {
+  STR: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14.5 4h5v5m-5-5L22 2m-8 6-3 3-5-5-4 4 5 5-3 3h-5v5h5l3-3 5 5 4-4-5-5 3-3V4z"/>
+    </svg>
+  ),
+  DEX: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  CON: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  ),
+  INT: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    </svg>
+  ),
+  WIS: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ),
+  CHA: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  )
 };
+
+// Map backend attributes to classic D&D stats
+const STAT_MAPPING = [
+  { key: 'strength',   label: 'STR', icon: Icons.STR },
+  { key: 'creativity', label: 'DEX', icon: Icons.DEX },
+  { key: 'endurance',  label: 'CON', icon: Icons.CON },
+  { key: 'intellect',  label: 'INT', icon: Icons.INT },
+  { key: 'wisdom',     label: 'WIS', icon: Icons.WIS },
+];
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -42,50 +83,81 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ease: 'easeOut', duration: 0.2 }}
-        style={{ display: 'flex', flexDirection: 'column', gap: 28 }}
+        style={{ display: 'flex', flexDirection: 'column', gap: 32 }}
       >
-        <div>
-          <h1 className="font-display" style={{ fontSize: 28, color: 'var(--gold)' }}>Dashboard</h1>
-          <p style={{ color: 'var(--text-dim)', marginTop: 4 }}>Your heroic journey at a glance</p>
+        <div style={{ borderBottom: '2px solid var(--border)', paddingBottom: 16 }}>
+          <h1 className="font-display neon-flicker" style={{ fontSize: 36, color: 'var(--red)' }}>Player Sheet</h1>
+          <p style={{ color: 'var(--text-dim)', marginTop: 8, fontFamily: 'VT323, monospace', fontSize: 18, textTransform: 'uppercase' }}>
+            Hawkins Middle School // Official Record
+          </p>
         </div>
 
         {isLoading && <LoadingSkeleton rows={4} height={120} />}
-        {isError && <p style={{ color: 'var(--red)' }}>Failed to load character data.</p>}
+        {isError && <p style={{ color: 'var(--red)', fontFamily: 'VT323, monospace' }}>ERROR: CONNECTION TO MAINFRAME LOST.</p>}
 
         {character && (
           <>
-            {/* Character header */}
-            <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-              <div style={{ fontSize: 64 }}>
-                {{ Warrior: '⚔️', Mage: '🔮', Rogue: '🗡️', Sage: '📜' }[character.class as string] ?? '🧙'}
+            {/* Player ID Card (Retro Styling) */}
+            <div className="card" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+              {/* Tape Graphic */}
+              <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', width: 60, height: 25, background: 'rgba(255,255,255,0.1)', transformOrigin: 'center', rotate: '-2deg', boxShadow: '0 2px 5px rgba(0,0,0,0.5)' }} />
+              
+              <div style={{ 
+                width: 120, 
+                height: 120, 
+                border: '4px solid var(--border)', 
+                background: 'var(--bg)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '4px 4px 0 var(--border)'
+              }}>
+                <span style={{ fontSize: 48, filter: 'grayscale(100%) contrast(1.5)' }}>
+                  {{ Warrior: '⚔️', Mage: '🔮', Rogue: '🗡️', Sage: '📜' }[character.class as string] ?? '👤'}
+                </span>
               </div>
-              <div style={{ flex: 1, minWidth: 200 }}>
-                <h2 className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>{character.name}</h2>
-                <p style={{ color: 'var(--text-dim)', fontSize: 14 }}>{character.class} · Level {character.level}</p>
-                <div style={{ marginTop: 12 }}>
-                  <XPBar level={character.level} xp={character.xp} />
+
+              <div style={{ flex: 1, minWidth: 250, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <h2 style={{ fontFamily: 'VT323, monospace', fontSize: 48, color: 'var(--text)', lineHeight: 1, textTransform: 'uppercase' }}>{character.name}</h2>
+                  <div style={{ display: 'flex', gap: 16, fontFamily: 'Share Tech Mono, monospace', fontSize: 14, color: 'var(--indigo)' }}>
+                    <span>CLASS: {character.class.toUpperCase()}</span>
+                    <span>//</span>
+                    <span>STATUS: ALIVE</span>
+                  </div>
+                </div>
+                
+                <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
+                  <div style={{ width: '100%' }}>
+                    <XPBar level={character.level} xp={character.xp} />
+                  </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <StreakBadge streak={character.streak} />
-                <span style={{ fontSize: 12, color: 'var(--text-dim)' }}>Day Streak</span>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 32, color: 'var(--gold)', fontWeight: 700 }}>💰 {character.gold}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>Gold</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingLeft: 32, borderLeft: '2px dashed var(--border)' }}>
+                <div style={{ textAlign: 'center', padding: '12px 24px', border: '2px solid var(--border)', background: 'var(--bg)' }}>
+                  <div style={{ fontSize: 12, fontFamily: 'VT323, monospace', color: 'var(--text-dim)', marginBottom: 4 }}>TOTAL GOLD</div>
+                  <div style={{ fontSize: 24, fontFamily: 'Share Tech Mono, monospace', color: 'var(--gold)' }}>{character.gold}</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <StreakBadge streak={character.streak} />
+                  <span style={{ fontSize: 14, fontFamily: 'VT323, monospace', color: 'var(--text-dim)' }}>ACTIVE STREAK</span>
+                </div>
               </div>
             </div>
 
-            {/* Attributes */}
+            {/* Attributes List */}
             <div>
-              <h2 className="font-display" style={{ fontSize: 18, marginBottom: 16 }}>Attributes</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 12 }}>
-                {(['intellect', 'strength', 'wisdom', 'creativity', 'endurance'] as const).map((attr) => (
+              <h2 style={{ fontFamily: 'VT323, monospace', fontSize: 24, marginBottom: 16, borderBottom: '1px solid var(--border)', paddingBottom: 8, display: 'inline-block' }}>
+                BASE ATTRIBUTES
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 16 }}>
+                {STAT_MAPPING.map((stat) => (
                   <StatCard
-                    key={attr}
-                    name={attr}
-                    value={character[attr] as number}
-                    icon={STAT_ICONS[attr]}
+                    key={stat.key}
+                    name={stat.label}
+                    value={character[stat.key] as number}
+                    icon={stat.icon}
                   />
                 ))}
               </div>

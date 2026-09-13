@@ -41,9 +41,17 @@ export default function HistoryPage() {
         {isLoading && <LoadingSkeleton rows={5} height={72} />}
 
         {!isLoading && logs.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-dim)' }}>
-            <p style={{ fontSize: 40 }}>📜</p>
-            <p style={{ marginTop: 12 }}>No completed quests yet. Begin your adventure!</p>
+          <div className="card" style={{ textAlign: 'center', padding: 64, color: 'var(--text-dim)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+              <svg className="neon-flicker" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ width: 80, height: 80, filter: 'drop-shadow(0 0 10px var(--indigo))' }}>
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+                <circle cx="8" cy="14" r="2" />
+                <circle cx="16" cy="14" r="2" />
+                <path d="M10 14h4" />
+              </svg>
+            </div>
+            <p style={{ fontFamily: 'VT323, monospace', fontSize: 20 }}>NO LOGS FOUND. INSERT TAPE.</p>
           </div>
         )}
 

@@ -36,9 +36,17 @@ export default function InventoryPage() {
         {isLoading && <LoadingSkeleton rows={4} height={160} />}
 
         {!isLoading && items.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-dim)' }}>
-            <p style={{ fontSize: 40 }}>🎒</p>
-            <p style={{ marginTop: 12 }}>Your bag is empty. Visit the Shop to spend your Gold!</p>
+          <div className="card" style={{ textAlign: 'center', padding: 64, color: 'var(--text-dim)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+              <svg className="neon-flicker" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ width: 80, height: 80, filter: 'drop-shadow(0 0 10px var(--indigo))' }}>
+                <rect x="6" y="8" width="12" height="14" rx="2" />
+                <path d="M12 2v6" />
+                <path d="M9 2h6" />
+                <path d="M9 14h6" />
+                <circle cx="12" cy="18" r="1.5" />
+              </svg>
+            </div>
+            <p style={{ fontFamily: 'VT323, monospace', fontSize: 20 }}>YOUR BACKPACK IS EMPTY.</p>
           </div>
         )}
 
