@@ -51,21 +51,31 @@ export default function InventoryPage() {
         )}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-          {items.map((item: typeof SHOP_ITEMS[number]) => (
-            <div key={item.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center', textAlign: 'center' }}>
-              <span style={{ fontSize: 40 }} aria-hidden>{item.icon}</span>
+          {items.map((item: typeof SHOP_ITEMS[number], idx: number) => (
+            <motion.div 
+              key={item.id} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -6, borderColor: 'var(--red-primary)', boxShadow: '0 10px 30px rgba(0,0,0,0.6), 0 0 20px var(--red-glow)' }}
+              transition={{ delay: idx * 0.06, duration: 0.35 }}
+              className="card" 
+              style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center', textAlign: 'center' }}
+            >
+              <motion.span whileHover={{ scale: 1.25, rotate: [0, -8, 8, 0] }} style={{ fontSize: 40, cursor: 'pointer' }} aria-hidden>{item.icon}</motion.span>
               <h3 style={{ fontWeight: 600 }}>{item.name}</h3>
               <p style={{ fontSize: 12, color: 'var(--text-dim)' }}>{item.description}</p>
               {item.type === 'theme' && (
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className={`btn btn-sm ${theme === item.id ? 'btn-gold' : 'btn-ghost'}`}
                   onClick={() => setTheme(theme === item.id ? 'default' : item.id)}
                   aria-pressed={theme === item.id}
                 >
                   {theme === item.id ? '✓ Active' : 'Apply Theme'}
-                </button>
+                </motion.button>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>

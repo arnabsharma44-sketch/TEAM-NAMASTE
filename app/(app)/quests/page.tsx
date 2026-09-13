@@ -37,20 +37,27 @@ function QuestForm({ initial, onSave, onClose }: {
   return (
     <motion.div
       className="overlay"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      initial={{ opacity: 0, backdropFilter: 'blur(0px)' }} 
+      animate={{ opacity: 1, backdropFilter: 'blur(8px)' }} 
+      exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
         className="card"
-        initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-        style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 16 }}
+        initial={{ scale: 0.92, opacity: 0, y: 15 }} 
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid var(--red-primary)', boxShadow: '0 0 35px var(--red-glow-strong)' }}
         role="dialog" aria-modal="true" aria-labelledby="quest-form-title"
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 id="quest-form-title" className="font-display" style={{ fontSize: 20 }}>
+          <h2 id="quest-form-title" className="font-display red-flicker" style={{ fontSize: 20, color: 'var(--red-primary)' }}>
             {initial ? 'Edit Quest' : 'New Quest'}
           </h2>
-          <button onClick={onClose} aria-label="Close dialog"><X size={20} aria-hidden /></button>
+          <motion.button whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }} onClick={onClose} aria-label="Close dialog">
+            <X size={20} aria-hidden />
+          </motion.button>
         </div>
 
         <div>
@@ -77,10 +84,10 @@ function QuestForm({ initial, onSave, onClose }: {
         </div>
 
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={submit} disabled={saving || !form.title.trim()}>
+          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} className="btn btn-ghost" onClick={onClose}>Cancel</motion.button>
+          <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} className="btn btn-primary" onClick={submit} disabled={saving || !form.title.trim()}>
             {saving ? 'Saving...' : initial ? 'Update Quest' : 'Create Quest'}
-          </button>
+          </motion.button>
         </div>
       </motion.div>
     </motion.div>
@@ -147,17 +154,28 @@ export default function QuestsPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ ease: 'easeOut', duration: 0.2 }} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 className="font-display" style={{ fontSize: 28, color: 'var(--gold)' }}>Active Quests</h1>
+            <h1 className="font-display red-flicker" style={{ fontSize: 28, color: 'var(--gold)' }}>Active Quests</h1>
             <p style={{ color: 'var(--text-dim)', marginTop: 4 }}>{quests.length} quest{quests.length !== 1 ? 's' : ''} awaiting</p>
           </div>
-          <button className="btn btn-primary" onClick={() => setModal('create')} aria-label="Create new quest">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="btn btn-primary" 
+            onClick={() => setModal('create')} 
+            aria-label="Create new quest"
+          >
             <Plus size={16} aria-hidden /> New Quest
-          </button>
+          </motion.button>
         </div>
 
         {isLoading && <LoadingSkeleton rows={3} height={130} />}
         {!isLoading && quests.length === 0 && (
-          <div className="card" style={{ textAlign: 'center', padding: 64, color: 'var(--text-dim)' }}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="card" 
+            style={{ textAlign: 'center', padding: 64, color: 'var(--text-dim)' }}
+          >
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
               <svg className="neon-flicker" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ width: 80, height: 80, filter: 'drop-shadow(0 0 10px var(--indigo))' }}>
                 <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
@@ -170,12 +188,19 @@ export default function QuestsPage() {
               </svg>
             </div>
             <p style={{ fontFamily: 'VT323, monospace', fontSize: 20 }}>NO ACTIVE CAMPAIGNS. ROLL INITIATIVE!</p>
-          </div>
+          </motion.div>
         )}
 
         <div style={{ display: 'grid', gap: 14 }}>
-          {quests.map((q) => (
-            <QuestCard key={q.id} quest={q} onComplete={completeQuest} onDelete={deleteQuest} onEdit={(q) => setModal(q)} />
+          {quests.map((q, idx) => (
+            <motion.div
+              key={q.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.06, duration: 0.3 }}
+            >
+              <QuestCard quest={q} onComplete={completeQuest} onDelete={deleteQuest} onEdit={(q) => setModal(q)} />
+            </motion.div>
           ))}
         </div>
       </motion.div>

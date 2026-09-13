@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff } from 'lucide-react';
 
+import { FloatingSpores } from '@/components/ui/FloatingSpores';
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -34,20 +36,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: 16 }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: 16, position: 'relative' }}>
+      <FloatingSpores count={15} />
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ease: 'easeOut', duration: 0.2 }}
+        initial={{ opacity: 0, y: 20, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ ease: 'easeOut', duration: 0.4 }}
         className="card"
-        style={{ width: '100%', maxWidth: 420, display: 'flex', flexDirection: 'column', gap: 24 }}
+        style={{ width: '100%', maxWidth: 420, display: 'flex', flexDirection: 'column', gap: 24, border: '1px solid var(--border-active)', boxShadow: '0 0 30px var(--red-glow)' }}
       >
         <div style={{ textAlign: 'center' }}>
-          <h1 className="font-display" style={{ fontSize: 32, color: 'var(--gold)' }}>⚔️ Life RPG</h1>
+          <h1 className="font-display red-flicker" style={{ fontSize: 32, color: 'var(--red-primary)' }}>⚔️ HELLFIRE QUESTS</h1>
           <p style={{ color: 'var(--text-dim)', marginTop: 8 }}>Enter your realm, Hero</p>
         </div>
 
-        {error && <div role="alert" style={{ background: '#3a1010', border: '1px solid var(--red)', borderRadius: 8, padding: '10px 14px', color: 'var(--red)', fontSize: 14 }}>{error}</div>}
+        {error && <motion.div initial={{ x: -10, opacity: 0 }} animate={{ x: [0, -8, 8, -8, 0], opacity: 1 }} role="alert" style={{ background: '#3a1010', border: '1px solid var(--red)', borderRadius: 8, padding: '10px 14px', color: 'var(--red)', fontSize: 14 }}>{error}</motion.div>}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
@@ -71,9 +74,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <button className="btn btn-primary" onClick={handleLogin} disabled={loading} style={{ marginTop: 8 }}>
+        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.95 }} className="btn btn-primary" onClick={handleLogin} disabled={loading} style={{ marginTop: 8 }}>
           {loading ? 'Entering...' : 'Enter Realm'}
-        </button>
+        </motion.button>
 
         <div style={{ display: 'flex', alignItems: 'center', margin: '8px 0' }}>
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
@@ -81,7 +84,7 @@ export default function LoginPage() {
           <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
-        <a href="/api/auth/google" className="btn btn-ghost" style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
+        <motion.a whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} href="/api/auth/google" className="btn btn-ghost" style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -89,10 +92,10 @@ export default function LoginPage() {
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
           Continue with Google
-        </a>
+        </motion.a>
 
         <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-dim)' }}>
-          New hero?{' '}<Link href="/signup" style={{ color: 'var(--indigo-light)', fontWeight: 600 }}>Create Character</Link>
+          New hero?{' '}<Link href="/signup" style={{ color: 'var(--red-primary)', fontWeight: 600 }}>Create Character</Link>
         </p>
       </motion.div>
     </div>

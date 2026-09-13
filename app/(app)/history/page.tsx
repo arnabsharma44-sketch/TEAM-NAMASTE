@@ -56,8 +56,16 @@ export default function HistoryPage() {
         )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {logs.map((log) => (
-            <div key={log.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px' }}>
+          {logs.map((log, idx) => (
+            <motion.div 
+              key={log.id} 
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ x: 4, borderColor: 'var(--red-primary)', boxShadow: '0 4px 20px rgba(0,0,0,0.6), 0 0 15px var(--red-glow)' }}
+              transition={{ delay: idx * 0.04, duration: 0.3 }}
+              className="card" 
+              style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 20px' }}
+            >
               <span style={{ fontSize: 28 }} aria-hidden>{CAT_EMOJI[log.attribute] ?? '⚔️'}</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{log.attribute}</div>
@@ -67,15 +75,15 @@ export default function HistoryPage() {
                 <div style={{ color: 'var(--indigo-light)', fontWeight: 700 }}>+{log.xpEarned} XP</div>
                 <div style={{ color: 'var(--gold)', fontWeight: 600, fontSize: 13 }}>+{log.goldEarned} G</div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {totalPages > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10, alignItems: 'center' }}>
-            <button className="btn btn-ghost btn-sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page">← Prev</button>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn btn-ghost btn-sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page">← Prev</motion.button>
             <span style={{ color: 'var(--text-dim)', fontSize: 14 }}>Page {page} of {totalPages}</span>
-            <button className="btn btn-ghost btn-sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-label="Next page">Next →</button>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="btn btn-ghost btn-sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-label="Next page">Next →</motion.button>
           </div>
         )}
       </motion.div>

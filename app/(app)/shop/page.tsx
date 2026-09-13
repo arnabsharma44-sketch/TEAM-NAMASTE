@@ -72,8 +72,15 @@ export default function ShopPage() {
         {(itemsLoading || invLoading) && <LoadingSkeleton rows={6} height={200} />}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
-          {(items ?? []).map((item: { id: string; name: string; description: string; price: number; icon: string }) => (
-            <ShopItem key={item.id} item={item} owned={ownedIds.has(item.id)} onBuy={buy} />
+          {(items ?? []).map((item: { id: string; name: string; description: string; price: number; icon: string }, idx: number) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05, duration: 0.35 }}
+            >
+              <ShopItem item={item} owned={ownedIds.has(item.id)} onBuy={buy} />
+            </motion.div>
           ))}
         </div>
       </motion.div>
