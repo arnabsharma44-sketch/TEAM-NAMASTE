@@ -50,14 +50,16 @@ export default function HomePage() {
         aria-hidden="true"
         style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
+          top: '50%',
+          left: '50%',
+          width: '100vh',
+          height: '100vw',
+          transform: 'translate(-50%, -50%) rotate(-90deg)',
+          transformOrigin: 'center',
           objectFit: 'cover',
           zIndex: -1,
           pointerEvents: 'none',
-          filter: 'brightness(0.7) contrast(1.15)',
+          filter: 'brightness(0.9) contrast(1.25) saturate(1.1)',
         }}
       >
         <source src="/homepage-video.mp4" type="video/mp4" />
