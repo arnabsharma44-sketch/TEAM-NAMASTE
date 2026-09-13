@@ -11,6 +11,14 @@ export type ShopItem = {
 
 export const SHOP_ITEMS: ShopItem[] = [
   {
+    id: 'theme-upside-down',
+    name: 'The Upside Down',
+    description: 'Enter the dark reflection. Inverts colors and adds CRT scanlines.',
+    price: 500,
+    type: 'theme',
+    icon: '🦇',
+  },
+  {
     id: 'theme-dark-dungeon',
     name: 'Dark Dungeon',
     description: 'A shadowy dungeon aesthetic with crimson accents.',

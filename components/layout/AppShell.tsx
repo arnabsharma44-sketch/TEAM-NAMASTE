@@ -9,12 +9,12 @@ import { useEffect } from 'react';
 import { useCharacterStore } from '@/store/character';
 
 const NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/quests',    label: 'Quests',     icon: Sword },
-  { href: '/shop',      label: 'Shop',       icon: ShoppingBag },
-  { href: '/history',   label: 'History',    icon: History },
-  { href: '/inventory', label: 'Inventory',  icon: Package },
-  { href: '/profile',   label: 'Profile',    icon: User },
+  { href: '/dashboard', label: 'Player Sheet', icon: LayoutDashboard },
+  { href: '/quests',    label: 'Campaigns',    icon: Sword },
+  { href: '/shop',      label: 'Starcourt Mall',icon: ShoppingBag },
+  { href: '/history',   label: 'Hawkins Logs', icon: History },
+  { href: '/inventory', label: 'The Backpack', icon: Package },
+  { href: '/profile',   label: 'Party Profile',icon: User },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -63,8 +63,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <nav className="sidebar" aria-label="Main navigation">
         <div style={{ marginBottom: 24 }}>
           <Link href="/">
-            <h1 className="font-display" style={{ fontSize: 22, color: 'var(--gold)', letterSpacing: 1, cursor: 'pointer' }}>
-              ⚔️ Life RPG
+            <h1 className="font-display" style={{ fontSize: 20, color: 'var(--gold)', letterSpacing: 1, cursor: 'pointer' }}>
+              ⚔️ Hellfire Quests
             </h1>
           </Link>
         </div>
