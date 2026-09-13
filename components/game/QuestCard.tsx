@@ -47,6 +47,7 @@ export function QuestCard({ quest, onComplete, onDelete, onEdit }: Props) {
   return (
     <motion.div
       className="card"
+      whileHover={{ y: -4, borderColor: 'var(--border-active)', boxShadow: '0 10px 30px rgba(0,0,0,0.6), 0 0 20px var(--red-glow)' }}
       animate={shaking ? { x: [0, -8, 8, -8, 0] } : {}}
       transition={{ duration: 0.3 }}
       style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 12 }}
@@ -64,27 +65,33 @@ export function QuestCard({ quest, onComplete, onDelete, onEdit }: Props) {
       </div>
 
       <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.95 }}
           className="btn btn-primary btn-sm"
           onClick={handleComplete}
           aria-label={`Complete quest: ${quest.title}`}
         >
           <Check size={14} aria-hidden /> Complete
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.95 }}
           className="btn btn-ghost btn-sm"
           onClick={() => onEdit(quest)}
           aria-label={`Edit quest: ${quest.title}`}
         >
           <Pencil size={14} aria-hidden /> Edit
-        </button>
-        <button
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.95 }}
           className="btn btn-danger btn-sm"
           onClick={() => onDelete(quest.id)}
           aria-label={`Abandon quest: ${quest.title}`}
         >
           <Trash2 size={14} aria-hidden /> Abandon
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

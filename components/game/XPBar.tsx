@@ -1,6 +1,7 @@
 'use client';
 // components/game/XPBar.tsx
 import { xpForLevel } from '@/lib/game';
+import { motion } from 'framer-motion';
 
 type Props = { level: number; xp: number };
 
@@ -32,20 +33,27 @@ export function XPBar({ level, xp }: Props) {
           boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
         }}
       >
-        {Array.from({ length: totalBlocks }).map((_, i) => (
-          <div 
-            key={i}
-            style={{
-              flex: 1,
-              height: '14px',
-              backgroundColor: i < filledBlocks ? 'var(--indigo)' : 'transparent',
-              boxShadow: i < filledBlocks ? '0 0 8px var(--indigo)' : 'none',
-              border: '1px solid',
-              borderColor: i < filledBlocks ? 'var(--indigo-light)' : 'var(--bg2)',
-              opacity: i < filledBlocks ? 1 : 0.3
-            }}
-          />
-        ))}
+        {Array.from({ length: totalBlocks }).map((_, i) => {
+          const isFilled = i < filledBlocks;
+          return (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0.2 }}
+              animate={{ 
+                opacity: isFilled ? 1 : 0.3,
+                backgroundColor: isFilled ? 'var(--indigo)' : 'transparent',
+                boxShadow: isFilled ? '0 0 10px var(--indigo)' : 'none'
+              }}
+              transition={{ delay: i * 0.02, duration: 0.3 }}
+              style={{
+                flex: 1,
+                height: '14px',
+                border: '1px solid',
+                borderColor: isFilled ? 'var(--indigo-light)' : 'var(--bg2)',
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

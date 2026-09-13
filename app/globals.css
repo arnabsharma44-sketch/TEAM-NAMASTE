@@ -446,33 +446,200 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   animation: pulseLogo 3s infinite alternate;
 }
 
-/* Animations */
+/* Animations & Micro-Interactions */
 @keyframes pulseLogo {
-  0% { opacity: 0.5; transform: scale(1); }
-  100% { opacity: 1; transform: scale(1.02); }
+  0% { opacity: 0.6; transform: scale(1); filter: blur(4px); }
+  50% { opacity: 0.85; transform: scale(1.01); filter: blur(3px); }
+  100% { opacity: 1; transform: scale(1.02); filter: blur(2px); }
+}
+
+@keyframes redLightFlicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 12px var(--red-primary)); }
+  3% { opacity: 0.7; filter: drop-shadow(0 0 4px var(--red-dark)); }
+  6% { opacity: 1; filter: drop-shadow(0 0 18px var(--red-primary)); }
+  7% { opacity: 0.5; }
+  8% { opacity: 1; }
+  65% { opacity: 1; }
+  66% { opacity: 0.8; }
+  67% { opacity: 1; }
+}
+
+@keyframes ambientSporeFloat {
+  0% { transform: translateY(105vh) translateX(0) scale(0.8); opacity: 0; }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(-5vh) translateX(60px) scale(1.4); opacity: 0; }
+}
+
+@keyframes buttonShimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes pulseGoldGlow {
+  0%, 100% { text-shadow: 0 0 8px rgba(245, 184, 61, 0.4); }
+  50% { text-shadow: 0 0 16px rgba(245, 184, 61, 0.8); transform: scale(1.05); }
+}
+
+/* Ambient Spores Layer */
+.spores-ambient-container {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ambient-spore {
+  position: absolute;
+  background: rgba(255, 100, 100, 0.4);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 26, 26, 0.6);
+  filter: blur(1px);
+  animation: ambientSporeFloat linear infinite;
+  will-change: transform, opacity;
+}
+
+.red-flicker {
+  animation: redLightFlicker 8s infinite;
 }
 
 .neon-flicker {
-  animation: neonFlicker 5s infinite alternate;
+  animation: neonFlicker 6s infinite alternate;
 }
+
 @keyframes neonFlicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
     opacity: 1; 
-    text-shadow: 0 0 10px var(--red-glow-strong);
+    text-shadow: 0 0 10px var(--red-glow-strong), 0 0 20px var(--red-glow);
   }
   20%, 24%, 55% { 
-    opacity: 0.8; 
-    text-shadow: none;
+    opacity: 0.75; 
+    text-shadow: 0 0 4px var(--red-dark);
   }
 }
 
+/* Enhanced Buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+  will-change: transform, box-shadow;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(-15deg);
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  animation: buttonShimmer 0.75s ease-out;
+}
+
+.btn-primary:hover { 
+  background: rgba(255, 26, 26, 0.25);
+  box-shadow: 0 0 25px var(--red-glow-strong), inset 0 0 10px rgba(255, 26, 26, 0.3);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  border-color: var(--red-primary);
+}
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-hero:hover { 
+  box-shadow: 0 0 35px var(--red-glow-strong), inset 0 0 15px rgba(255, 26, 26, 0.4);
+  letter-spacing: 2.5px;
+  text-shadow: 0 0 12px #fff;
+}
+.btn-hero:active { transform: scale(0.97); }
+
+.btn-gold:hover {
+  background: rgba(245, 184, 61, 0.2);
+  box-shadow: 0 0 20px rgba(245, 184, 61, 0.5);
+}
+.btn-gold:active { transform: scale(0.97); }
+
+.btn-danger:hover {
+  background: rgba(255, 26, 26, 0.25);
+  box-shadow: 0 0 20px rgba(255, 26, 26, 0.6);
+}
+.btn-danger:active { transform: scale(0.97); }
+
+/* Card Parallax and Glow */
+.card, .glass-panel {
+  will-change: transform, box-shadow, border-color;
+}
+
+.card:hover, .glass-panel:hover {
+  border-color: var(--border-active);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px var(--red-glow);
+}
+
+.feature-card:hover {
+  border-color: var(--red-primary);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.6), 0 0 22px var(--red-glow-strong);
+  transform: translateY(-5px) scale(1.01);
+}
+
+.feature-card:hover .feature-card-title {
+  color: #fff;
+  text-shadow: 0 0 15px var(--red-primary);
+}
+
+/* Gold Pulse */
+.gold-value {
+  color: var(--gold);
+  transition: all 0.3s ease;
+}
+.gold-display:hover .gold-value {
+  animation: pulseGoldGlow 1s ease infinite alternate;
+}
+
+/* Input Focus Glow */
+.input:focus, .select:focus, .search-input:focus {
+  border-color: var(--red-primary);
+  box-shadow: 0 0 15px var(--red-glow-strong), inset 0 0 5px rgba(255, 26, 26, 0.2);
+  background: rgba(15, 15, 20, 0.85);
+}
+
+/* Skeleton Loading Pulse */
 .skeleton {
-  background: var(--border-subtle);
-  animation: pulseLogo 1.5s infinite alternate;
+  background: linear-gradient(90deg, var(--border-subtle) 25%, rgba(255, 26, 26, 0.15) 50%, var(--border-subtle) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 2s infinite linear;
   border-radius: var(--radius);
 }
 
-/* Mobile */
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .spores-ambient-container, .spore, .ambient-spore {
+    display: none !important;
+  }
+
+  .app-bg-layer, .bg-vecna, .bg-mindflayer {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .btn:hover, .feature-card:hover, .nav-link:hover {
+    transform: none !important;
+  }
+}
+
+/* Mobile responsive styles */
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .mobile-nav { display: flex; justify-content: space-around; }
@@ -481,3 +648,4 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .top-bar { padding: 16px 0; }
   .search-bar-container { display: none; } 
 }
+

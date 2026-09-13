@@ -7,7 +7,9 @@ import { useUIStore } from '@/store/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useCharacterStore } from '@/store/character';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { FloatingSpores } from '@/components/ui/FloatingSpores';
+import { PageTransition } from '@/components/ui/PageTransition';
 
 const NAV = [
   { href: '/home',      label: 'Home',         icon: Home },
@@ -63,34 +65,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-shell" data-theme={theme}>
-      {/* Background Layers */}
+      {/* Background Layers & Spores */}
       <div className="app-bg-layer" aria-hidden="true" />
       <div className="app-bg-overlay" aria-hidden="true" />
       <div className="app-bg-vignette" aria-hidden="true" />
+      <FloatingSpores count={20} />
 
       {/* Desktop sidebar */}
       <nav className="sidebar" aria-label="Main navigation">
         <div style={{ marginBottom: 32, padding: '0 8px' }}>
           <Link href="/home">
-            <div className="brand-logo" style={{ cursor: 'pointer' }}>
+            <motion.div 
+              className="brand-logo red-flicker" 
+              whileHover={{ scale: 1.03, filter: 'drop-shadow(0 0 15px var(--red-primary))' }}
+              whileTap={{ scale: 0.98 }}
+              style={{ cursor: 'pointer' }}
+            >
               HELLFIRE<br/>QUESTS
-            </div>
+            </motion.div>
           </Link>
         </div>
         
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {NAV.map(({ href, label, icon: Icon }) => {
+          {NAV.map(({ href, label, icon: Icon }, index) => {
             const isActive = pathname.startsWith(href);
             return (
-              <Link
+              <motion.div
                 key={href}
-                href={href}
-                className={`nav-link ${isActive ? 'active' : ''}`}
-                aria-current={isActive ? 'page' : undefined}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.06, duration: 0.3 }}
               >
-                <Icon size={18} style={{ color: isActive ? 'var(--red-primary)' : 'inherit', transition: 'color 0.2s ease' }} aria-hidden />
-                {label}
-              </Link>
+                <Link
+                  href={href}
+                  className={`nav-link ${isActive ? 'active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <Icon size={18} style={{ color: isActive ? 'var(--red-primary)' : 'inherit', transition: 'color 0.2s ease, transform 0.2s ease' }} aria-hidden />
+                  {label}
+                </Link>
+              </motion.div>
             );
           })}
         </div>
@@ -141,25 +155,40 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           
           <div className="top-bar-actions">
-            <button className="btn-ghost" style={{ padding: 8, borderRadius: '50%' }}>
+            <motion.button 
+              whileHover={{ scale: 1.1, rotate: [0, -10, 10, 0] }}
+              whileTap={{ scale: 0.9 }}
+              className="btn-ghost" 
+              style={{ padding: 8, borderRadius: '50%' }}
+              aria-label="Notifications"
+            >
               <Bell size={20} />
-            </button>
-            <div className="gold-display">
+            </motion.button>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="gold-display"
+            >
               <span style={{ color: 'var(--gold)' }}>🪙</span> Gold <span className="gold-value">{character?.gold || 0}</span>
-            </div>
+            </motion.div>
             <Link href="/profile" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <motion.div 
+                whileHover={{ scale: 1.1, boxShadow: '0 0 15px var(--red-glow-strong)' }}
+                style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
+              >
                 <User size={20} color="var(--red-primary)" />
-              </div>
+              </motion.div>
             </Link>
           </div>
         </header>
 
         {/* Page Content */}
         <main style={{ flex: 1, paddingBottom: 64 }}>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </main>
       </div>
     </div>
   );
 }
+

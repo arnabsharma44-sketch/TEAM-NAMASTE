@@ -57,9 +57,13 @@ export default function HomePage() {
             Complete the quest.
           </p>
           <Link href="/quests">
-            <button className="btn-hero">
+            <motion.button 
+              whileHover={{ scale: 1.03, boxShadow: '0 0 35px var(--red-glow-strong), inset 0 0 15px rgba(255, 26, 26, 0.4)' }}
+              whileTap={{ scale: 0.97 }}
+              className="btn-hero"
+            >
               ENTER THE UPSIDE DOWN <span style={{ marginLeft: 8 }}>→</span>
-            </button>
+            </motion.button>
           </Link>
         </motion.div>
       </section>
@@ -86,14 +90,19 @@ export default function HomePage() {
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                whileHover={{ y: -6, borderColor: 'var(--red-primary)', boxShadow: '0 12px 35px rgba(0,0,0,0.6), 0 0 25px var(--red-glow-strong)' }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
                 className="feature-card"
               >
                 <div className="feature-card-image-wrap">
-                  {/* Using a placeholder background or empty dark space for cinematic images */}
                   <div className="feature-card-gradient" />
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 48, filter: 'drop-shadow(0 0 10px rgba(255, 26, 26, 0.5)) grayscale(50%)' }}>{item.emoji}</span>
+                    <motion.span 
+                      whileHover={{ scale: 1.25, rotate: [0, -5, 5, 0] }}
+                      style={{ fontSize: 48, filter: 'drop-shadow(0 0 10px rgba(255, 26, 26, 0.5)) grayscale(30%)' }}
+                    >
+                      {item.emoji}
+                    </motion.span>
                   </div>
                 </div>
                 <div className="feature-card-content">
@@ -103,14 +112,16 @@ export default function HomePage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, color: 'var(--gold)', fontSize: 15 }}>
                       <span style={{ fontSize: 16 }}>🪙</span> {item.price}G
                     </div>
-                    <button 
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       className="btn btn-primary"
                       onClick={() => buyMutation.mutate(item.id)}
                       disabled={buyMutation.isPending}
                       style={{ padding: '8px 16px', fontSize: 13 }}
                     >
                       <ShoppingCart size={14} /> BUY
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>

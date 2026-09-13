@@ -1,11 +1,15 @@
 'use client';
 // components/game/StatCard.tsx
+import { motion } from 'framer-motion';
+
 type Props = { name: string; value: number; icon: React.ReactNode };
 
 export function StatCard({ name, value, icon }: Props) {
   return (
-    <div 
+    <motion.div 
       className="card" 
+      whileHover={{ y: -4, borderColor: 'var(--red-primary)', boxShadow: '0 8px 25px rgba(0,0,0,0.6), 0 0 15px var(--red-glow)' }}
+      transition={{ duration: 0.2 }}
       style={{ 
         display: 'flex', 
         flexDirection: 'column', 
@@ -40,9 +44,14 @@ export function StatCard({ name, value, icon }: Props) {
           gap: 12 
         }}
       >
-        <span style={{ fill: 'var(--text-dim)', width: 24, height: 24, opacity: 0.5 }} aria-hidden>{icon}</span>
-        <span style={{ fontSize: 36, fontFamily: 'Share Tech Mono, monospace', fontWeight: 700, color: 'var(--indigo)' }}>{value}</span>
+        <span style={{ fill: 'var(--text-dim)', width: 24, height: 24, opacity: 0.75 }} aria-hidden>{icon}</span>
+        <motion.span 
+          whileHover={{ scale: 1.1, color: '#fff', textShadow: '0 0 15px var(--red-primary)' }}
+          style={{ fontSize: 36, fontFamily: 'Share Tech Mono, monospace', fontWeight: 700, color: 'var(--indigo)', cursor: 'default' }}
+        >
+          {value}
+        </motion.span>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -98,23 +98,30 @@ export default function DashboardPage() {
         {character && (
           <>
             {/* Player ID Card (Cinematic Styling) */}
-            <div className="glass-panel" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
-              
-              <div style={{ 
-                width: 120, 
-                height: 120, 
-                border: '1px solid var(--border-active)', 
-                background: 'rgba(255, 26, 26, 0.05)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 'var(--radius)',
-                boxShadow: '0 0 20px var(--red-glow)'
-              }}>
+            <motion.div 
+              className="glass-panel" 
+              whileHover={{ borderColor: 'var(--red-primary)', boxShadow: '0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px var(--red-glow-strong)' }}
+              transition={{ duration: 0.3 }}
+              style={{ display: 'flex', gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}
+            >
+              <motion.div 
+                whileHover={{ scale: 1.05, rotate: [0, -4, 4, 0] }}
+                style={{ 
+                  width: 120, 
+                  height: 120, 
+                  border: '1px solid var(--border-active)', 
+                  background: 'rgba(255, 26, 26, 0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 'var(--radius)',
+                  boxShadow: '0 0 20px var(--red-glow)'
+                }}
+              >
                 <span style={{ fontSize: 48, filter: 'drop-shadow(0 0 10px rgba(255, 26, 26, 0.8))' }}>
                   {{ Warrior: '⚔️', Mage: '🔮', Rogue: '🗡️', Sage: '📜' }[character.class as string] ?? '👤'}
                 </span>
-              </div>
+              </motion.div>
 
               <div style={{ flex: 1, minWidth: 250, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
@@ -134,16 +141,19 @@ export default function DashboardPage() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingLeft: 32, borderLeft: '1px solid var(--border-subtle)' }}>
-                <div style={{ textAlign: 'center', padding: '12px 24px', background: 'rgba(10, 10, 15, 0.6)', borderRadius: 'var(--radius)', border: '1px solid var(--border-subtle)' }}>
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  style={{ textAlign: 'center', padding: '12px 24px', background: 'rgba(10, 10, 15, 0.6)', borderRadius: 'var(--radius)', border: '1px solid var(--border-subtle)' }}
+                >
                   <div style={{ fontSize: 12, fontFamily: 'Inter, sans-serif', color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600 }}>TOTAL GOLD</div>
-                  <div style={{ fontSize: 24, fontFamily: 'Inter, sans-serif', color: 'var(--gold)', fontWeight: 700 }}>{character.gold}</div>
-                </div>
+                  <div className="gold-value" style={{ fontSize: 24, fontFamily: 'Inter, sans-serif', color: 'var(--gold)', fontWeight: 700 }}>{character.gold}</div>
+                </motion.div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <StreakBadge streak={character.streak} />
                   <span style={{ fontSize: 13, fontFamily: 'Inter, sans-serif', color: 'var(--text-muted)', fontWeight: 600 }}>ACTIVE STREAK</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Attributes List */}
             <div>
@@ -151,13 +161,19 @@ export default function DashboardPage() {
                 BASE ATTRIBUTES
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 16 }}>
-                {STAT_MAPPING.map((stat) => (
-                  <StatCard
+                {STAT_MAPPING.map((stat, idx) => (
+                  <motion.div
                     key={stat.key}
-                    name={stat.label}
-                    value={character[stat.key] as number}
-                    icon={stat.icon}
-                  />
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.08, duration: 0.3 }}
+                  >
+                    <StatCard
+                      name={stat.label}
+                      value={character[stat.key] as number}
+                      icon={stat.icon}
+                    />
+                  </motion.div>
                 ))}
               </div>
             </div>

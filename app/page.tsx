@@ -105,32 +105,55 @@ export default function HomePage() {
       {/* ═══════════ HERO / SPLASH ═══════════ */}
       <section className="horror-hero">
         {!hasEntered && (
-          <div className={glitching ? 'glitch-out' : ''}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+            className={glitching ? 'glitch-out' : ''}
+          >
             <h1 className="splash-title">HELLFIRE<br/>QUESTS</h1>
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.03, boxShadow: '0 0 45px rgba(224, 0, 32, 0.9), inset 0 0 35px rgba(224, 0, 32, 0.7)' }}
+              whileTap={{ scale: 0.96 }}
               className="splash-btn"
               onClick={handleEnter}
               disabled={glitching}
             >
               Enter The Upside Down
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
 
         {/* Revealed Hero Content */}
         <div className={`hero-content-delayed ${hasEntered ? 'is-visible' : ''}`}>
-          <h2 style={{ fontFamily: 'Cinzel', fontSize: '36px', color: '#fff', textShadow: '0 0 20px #e00020' }}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={hasEntered ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ fontFamily: 'Cinzel', fontSize: '36px', color: '#fff', textShadow: '0 0 20px #e00020' }}
+          >
             Gamify Your Reality
-          </h2>
-          <p className="horror-hero-desc" style={{ marginTop: '16px' }}>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={hasEntered ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="horror-hero-desc" 
+            style={{ marginTop: '16px' }}
+          >
             Transform your daily tasks into epic quests. Build your character, level up your attributes,
             earn gold, and conquer the challenges of the real world.
-          </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={hasEntered ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}
+          >
             <Link href="/signup" className="splash-btn" style={{ padding: '12px 32px', fontSize: '14px' }}>
               Create Character
             </Link>
-          </div>
+          </motion.div>
         </div>
 
         <div className={`scroll-indicator ${hasEntered ? 'is-visible' : ''}`}>▼</div>
@@ -142,11 +165,17 @@ export default function HomePage() {
         {/* STATS BAR */}
         <div className="horror-stats">
           <div className="horror-stats-grid">
-            {STATS.map((s) => (
-              <div key={s.label}>
+            {STATS.map((s, idx) => (
+              <motion.div 
+                key={s.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+              >
                 <div className="horror-stat-number">{s.value}</div>
                 <div className="horror-stat-label">{s.label}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -158,12 +187,26 @@ export default function HomePage() {
             <h2 className="horror-section-title">Everything You Need to Level Up</h2>
           </div>
           <div className="horror-features-grid">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="horror-feature-card">
-                <div className="horror-feature-icon" aria-hidden="true">{f.icon}</div>
+            {FEATURES.map((f, idx) => (
+              <motion.div 
+                key={f.title} 
+                className="horror-feature-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, borderColor: 'var(--horror-red)', boxShadow: '0 15px 40px rgba(224, 0, 32, 0.3)' }}
+                transition={{ delay: idx * 0.15, duration: 0.5 }}
+              >
+                <motion.div 
+                  className="horror-feature-icon" 
+                  whileHover={{ scale: 1.15, rotate: [0, -10, 10, 0] }}
+                  aria-hidden="true"
+                >
+                  {f.icon}
+                </motion.div>
                 <h3 className="horror-feature-title">{f.title}</h3>
                 <p className="horror-feature-desc">{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
