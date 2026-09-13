@@ -40,8 +40,41 @@ export default function HomePage() {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
-      
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 64, position: 'relative' }}>
+      {/* High-Res Full-Width Horizontal Background Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          objectFit: 'cover',
+          zIndex: -1,
+          pointerEvents: 'none',
+          filter: 'brightness(0.7) contrast(1.15)',
+        }}
+      >
+        <source src="/homepage-video.mp4" type="video/mp4" />
+      </video>
+
+      {/* Ambient Radial Overlay for Superior Contrast */}
+      <div 
+        aria-hidden="true" 
+        style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          background: 'radial-gradient(circle at center, rgba(5,0,0,0.2) 0%, rgba(5,0,0,0.85) 100%)', 
+          zIndex: -1, 
+          pointerEvents: 'none' 
+        }} 
+      />
+
       {/* Cinematic Hero */}
       <section style={{ position: 'relative', marginTop: 40, paddingBottom: 40 }}>
         <motion.div
