@@ -37,14 +37,62 @@ export default function SignupPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: 16, position: 'relative' }}>
+    <div style={{ minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#050000', padding: 16, position: 'relative', overflow: 'hidden' }}>
+      {/* Background High-Res Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 0,
+          pointerEvents: 'none',
+          filter: 'brightness(0.75) contrast(1.15)',
+        }}
+      >
+        <source src="/login-video.mp4" type="video/mp4" />
+      </video>
+
+      {/* Dark Vignette Overlay for Crisp Contrast */}
+      <div 
+        aria-hidden="true" 
+        style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          background: 'radial-gradient(circle at center, rgba(5,0,0,0.35) 0%, rgba(5,0,0,0.85) 100%)', 
+          zIndex: 1, 
+          pointerEvents: 'none' 
+        }} 
+      />
+
       <FloatingSpores count={15} />
+
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ ease: 'easeOut', duration: 0.4 }}
         className="card"
-        style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 24, border: '1px solid var(--border-active)', boxShadow: '0 0 30px var(--red-glow)' }}
+        style={{ 
+          position: 'relative',
+          zIndex: 2,
+          width: '100%', 
+          maxWidth: 480, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 24, 
+          background: 'rgba(12, 4, 4, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid var(--border-active)', 
+          boxShadow: '0 0 40px var(--red-glow), inset 0 0 15px rgba(224, 0, 32, 0.2)' 
+        }}
       >
         <div style={{ textAlign: 'center' }}>
           <h1 className="font-display red-flicker" style={{ fontSize: 28, color: 'var(--red-primary)' }}>Create Your Character</h1>
