@@ -65,39 +65,40 @@ export default function HomePage() {
         <source src="/homepage-video.mp4" type="video/mp4" />
       </video>
 
-      {/* Ambient Radial Overlay for Superior Contrast */}
+      {/* Ambient Gradient Overlay for Superior Contrast on the Left */}
       <div 
         aria-hidden="true" 
         style={{ 
           position: 'fixed', 
           inset: 0, 
-          background: 'radial-gradient(circle at center, rgba(5,0,0,0.2) 0%, rgba(5,0,0,0.85) 100%)', 
+          background: 'linear-gradient(to right, rgba(5,0,0,0.95) 0%, rgba(5,0,0,0.6) 35%, transparent 100%)', 
           zIndex: -1, 
           pointerEvents: 'none' 
         }} 
       />
 
       {/* Cinematic Hero */}
-      <section style={{ position: 'relative', marginTop: 40, paddingBottom: 40 }}>
+      <section style={{ position: 'relative', marginTop: '20vh', paddingBottom: 60, paddingLeft: '4vw' }}>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h1 className="brand-logo neon-flicker" style={{ fontSize: 72, marginBottom: 24, display: 'inline-block' }}>
+          <h1 className="brand-logo neon-flicker" style={{ fontSize: 'clamp(64px, 8vw, 96px)', marginBottom: 16, display: 'inline-block', lineHeight: 1 }}>
             HELLFIRE<br/>QUESTS
           </h1>
-          <p style={{ color: 'var(--text-primary)', fontSize: 18, maxWidth: 400, lineHeight: 1.6, marginBottom: 40, fontFamily: 'Inter, sans-serif' }}>
+          <p style={{ color: 'var(--text-primary)', fontSize: 20, maxWidth: 450, lineHeight: 1.6, marginBottom: 40, fontFamily: 'Inter, sans-serif', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
             Step into the unknown. Face the darkness.<br/>
             Complete the quest.
           </p>
           <Link href="/quests">
             <motion.button 
-              whileHover={{ scale: 1.03, boxShadow: '0 0 35px var(--red-glow-strong), inset 0 0 15px rgba(255, 26, 26, 0.4)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 0 35px var(--red-glow-strong), inset 0 0 15px rgba(255, 26, 26, 0.4)' }}
               whileTap={{ scale: 0.97 }}
               className="btn-hero"
+              style={{ fontSize: 16, padding: '16px 32px' }}
             >
-              ENTER THE UPSIDE DOWN <span style={{ marginLeft: 8 }}>→</span>
+              ENTER THE UPSIDE DOWN <span style={{ marginLeft: 12 }}>→</span>
             </motion.button>
           </Link>
         </motion.div>
