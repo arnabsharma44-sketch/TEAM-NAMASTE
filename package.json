@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/jinendrabanthia/TEAM-NAMASTE#readme",
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@tanstack/react-query": "^5.102.8",
     "@types/node": "^22.20.2",
     "@types/react": "^19.3.0",
@@ -42,7 +44,6 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
     "prisma": "^5.22.0",
     "typescript": "5.9.3"
   }
