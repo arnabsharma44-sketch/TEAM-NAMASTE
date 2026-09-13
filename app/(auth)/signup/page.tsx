@@ -5,9 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff } from 'lucide-react';
-
-
-
 import { FloatingSpores } from '@/components/ui/FloatingSpores';
 
 export default function SignupPage() {
