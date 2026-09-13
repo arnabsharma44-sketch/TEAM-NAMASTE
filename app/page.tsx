@@ -73,6 +73,15 @@ export default function HomePage() {
     <div className="horror-page">
       {/* ═══════════ INTERACTIVE BACKGROUND LAYERS ═══════════ */}
       <div className="splash-bg-container">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={`bg-video ${hasEntered ? 'is-clear' : 'is-blurred'}`}
+        >
+          <source src="/homepage-video.mp4" type="video/mp4" />
+        </video>
         <div className={`bg-layer bg-vecna ${hasEntered ? 'is-clear' : 'is-blurred'}`} aria-hidden="true" />
         <div className={`bg-layer bg-mindflayer ${hasEntered ? 'is-clear' : 'is-blurred'}`} aria-hidden="true" />
         <div className={`lightning-flash ${hasEntered ? 'is-active' : ''}`} aria-hidden="true" />

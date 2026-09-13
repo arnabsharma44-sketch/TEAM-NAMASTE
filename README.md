@@ -4,69 +4,12 @@
 > *Official Submission for the TZPS Hackathon 2025*
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-https%3A%2F%2Fhellfirequests.vercel.app-E50914?style=for-the-badge&logo=vercel&logoColor=white)](https://hellfirequests.vercel.app/)
-[![Demo Video](https://img.shields.io/badge/Walkthrough%20Video-Landscape%20HD-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](file:///c:/jb/LIFE%20RPG/homepage%20video.mp4)
 [![Next.js 14](https://img.shields.io/badge/Next.js%2014-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma ORM](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Framer Motion](https://img.shields.io/badge/Framer%20Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![Security Hardened](https://img.shields.io/badge/Security-A%2B%20Hardened-00C853?style=for-the-badge&logo=shield&logoColor=white)](#-security-hardening--data-isolation)
-
----
-
-## 🎬 Walkthrough Video & Narration Script (Landscape View)
-
-The official 90–180s Hackathon Walkthrough Video ([`homepage video.mp4`](file:///c:/jb/LIFE%20RPG/homepage%20video.mp4)) demonstrates the live platform in **Landscape View**. Below is the detailed phase-by-phase action breakdown, spoken narration script, and targeted judging pillars:
-
-```carousel
-### Phase 1: High-Impact Hook & Creative Theme (0:00 – 0:20)
-**Visual Action**: Start on the landing page of [https://hellfirequests.vercel.app/](https://hellfirequests.vercel.app/). Move cursor across the screen to reveal the dynamic red radial flashlight spotlight effect against CRT scanlines and floating spore particles. Hover over the glowing neon title and click **ENTER THE UPSIDE DOWN**.
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Welcome to Hellfire Quests, a full-stack Life RPG that solves the delayed gratification problem of traditional productivity apps by translating daily habits into an immersive 1980s analog horror adventure. Grounded in the lore of Hawkins and the Upside Down, our platform turns real-world chores into high-stakes D&D campaigns with instant tactile feedback."*
-
-🎯 **Judging Pillars Targeted**: `Design & UX`, `Creativity & Gamification`
-<!-- slide -->
-### Phase 2: Authentication & Security Verification (0:20 – 0:40)
-**Visual Action**: Click on the authentication portal. Show the signup/login interface. Type in credentials for a test account (e.g., `steve_harrington@hawkins.io`), log in, and show the instant transition to the main party dashboard where user-specific character data and attributes load dynamically.
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Our secure backend authentication ensures session isolation so users can strictly access and modify their own character data, tasks, inventory, and stats across devices."*
-
-🎯 **Judging Pillars Targeted**: `User Authentication & Security`
-<!-- slide -->
-### Phase 3: Task Management & Attribute Gamification (0:40 – 1:10)
-**Visual Action**: Click `+ New Quest` to open the modal. Attempt to click submit with empty fields to demonstrate instant validation error handling. Fill out task: Title `"Solve Vector Calculus Problem Set"`, Attribute Category `"Intellect"`, Difficulty `"Nightmare"`, Reward `"+150 XP / +50 Gold"`. Click **Create Quest**. Show the new quest rendering instantly. Tab through the interface using only keyboard navigation (`Tab`, `Space`, `Enter`).
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Users can create, read, update, and delete tasks under full CRUD functionality. Tasks are categorized by core RPG attributes—such as Intellect, Strength, or Wisdom—allowing real-life work to directly level up virtual stats. Notice how the UI handles empty submissions gracefully while remaining 100% accessible via keyboard navigation."*
-
-🎯 **Judging Pillars Targeted**: `Database Schema & CRUD`, `Robustness & Edge Cases`, `Accessibility`
-<!-- slide -->
-### Phase 4: RPG Progression Engine & Tactile Feedback (1:10 – 1:45)
-**Visual Action**: Click checkmark to complete the newly created quest. Trigger Framer Motion micro-interactions, spring animations, particle effects, sound FX, and level-up modal celebration. Show XP progress bar filling up, crossing the threshold, and elevating character from **Level 1 to Level 2**.
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Completing a quest triggers our non-linear progression engine. Higher levels require exponentially more XP than lower levels to maintain long-term game balance. Earning XP, gaining levels, and building streaks yield instant, tactile micro-interactions and visual celebrations that replace mundane checkmarks with real dopamine."*
-
-🎯 **Judging Pillars Targeted**: `RPG Progression Engine`, `Tactile UX`, `Gamification`
-<!-- slide -->
-### Phase 5: Economy, Virtual Shop & Theme Engine (1:45 – 2:10)
-**Visual Action**: Navigate to The Shop / Starcourt Mall. Show gold balance update dynamically. Click **Buy** on a virtual reward item (*'The Upside Down Theme'* or *'D20 Badge'*). Show gold deducting in real-time and purchased item moving into **The Backpack / Inventory**. Toggle the Upside Down theme to demonstrate real-time dynamic styling shifts.
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Completing campaigns awards in-game currency. In the Starcourt Mall economy, users spend earned gold on virtual items, equipment, and visual environment themes, reinforcing positive habits through tangible rewards."*
-
-🎯 **Judging Pillars Targeted**: `Gamified Elements (Rewards/Economy)`, `Design Polish`
-<!-- slide -->
-### Phase 6: THE MANDATORY CRITICAL PROOF – Database Persistence (2:10 – 2:30)
-**Visual Action**: Execute a **Hard Page Refresh** (`Ctrl+R` / `Cmd+R`) on the deployed production URL ([https://hellfirequests.vercel.app/](https://hellfirequests.vercel.app/)). Once reloaded, highlight that the character's updated **Level 2 state**, modified XP bar, remaining gold balance, inventory item, and completed quest log persist completely intact.
-
-> 🗣️ **Spoken Narration Script**:  
-> *"Crucially, our system does not rely on local browser storage for primary state. Performing a full page refresh confirms that all user state changes, historical logs, inventory purchases, and RPG progression are persistently stored in our remote database architecture."*
-
-🎯 **Judging Pillars Targeted**: `Database Persistence Proof`, `Avoidance of Disqualification Rule #2`
-```
 
 ---
 
@@ -284,7 +227,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - [x] **Production-Safe Security**: Enforced user isolation, zero IDOR, and signed JWT cookies.
 - [x] **Cinematic UX**: High-performance Framer Motion animations and particle engines.
 - [x] **Mobile First & Responsive**: Optimized for desktop and mobile viewports.
-- [x] **Walkthrough Video**: 90–180s video added in Landscape Mode ([`homepage video.mp4`](file:///c:/jb/LIFE%20RPG/homepage%20video.mp4)).
 - [x] **Live Vercel Deployment**: [https://hellfirequests.vercel.app](https://hellfirequests.vercel.app)
 
 ---
