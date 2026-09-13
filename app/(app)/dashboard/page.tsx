@@ -97,30 +97,29 @@ export default function DashboardPage() {
 
         {character && (
           <>
-            {/* Player ID Card (Retro Styling) */}
-            <div className="card" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
-              {/* Tape Graphic */}
-              <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', width: 60, height: 25, background: 'rgba(255,255,255,0.1)', transformOrigin: 'center', rotate: '-2deg', boxShadow: '0 2px 5px rgba(0,0,0,0.5)' }} />
+            {/* Player ID Card (Cinematic Styling) */}
+            <div className="glass-panel" style={{ display: 'flex', gap: 32, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
               
               <div style={{ 
                 width: 120, 
                 height: 120, 
-                border: '4px solid var(--border)', 
-                background: 'var(--bg)',
+                border: '1px solid var(--border-active)', 
+                background: 'rgba(255, 26, 26, 0.05)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '4px 4px 0 var(--border)'
+                borderRadius: 'var(--radius)',
+                boxShadow: '0 0 20px var(--red-glow)'
               }}>
-                <span style={{ fontSize: 48, filter: 'grayscale(100%) contrast(1.5)' }}>
+                <span style={{ fontSize: 48, filter: 'drop-shadow(0 0 10px rgba(255, 26, 26, 0.8))' }}>
                   {{ Warrior: '⚔️', Mage: '🔮', Rogue: '🗡️', Sage: '📜' }[character.class as string] ?? '👤'}
                 </span>
               </div>
 
               <div style={{ flex: 1, minWidth: 250, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
-                  <h2 style={{ fontFamily: 'VT323, monospace', fontSize: 48, color: 'var(--text)', lineHeight: 1, textTransform: 'uppercase' }}>{character.name}</h2>
-                  <div style={{ display: 'flex', gap: 16, fontFamily: 'Share Tech Mono, monospace', fontSize: 14, color: 'var(--indigo)' }}>
+                  <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: 36, color: 'var(--text-primary)', lineHeight: 1, textTransform: 'uppercase', textShadow: '0 0 15px rgba(255, 26, 26, 0.3)' }}>{character.name}</h2>
+                  <div style={{ display: 'flex', gap: 16, fontFamily: 'Inter, sans-serif', fontSize: 14, color: 'var(--red-primary)', marginTop: 8, fontWeight: 600 }}>
                     <span>CLASS: {character.class.toUpperCase()}</span>
                     <span>//</span>
                     <span>STATUS: ALIVE</span>
@@ -134,14 +133,14 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingLeft: 32, borderLeft: '2px dashed var(--border)' }}>
-                <div style={{ textAlign: 'center', padding: '12px 24px', border: '2px solid var(--border)', background: 'var(--bg)' }}>
-                  <div style={{ fontSize: 12, fontFamily: 'VT323, monospace', color: 'var(--text-dim)', marginBottom: 4 }}>TOTAL GOLD</div>
-                  <div style={{ fontSize: 24, fontFamily: 'Share Tech Mono, monospace', color: 'var(--gold)' }}>{character.gold}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingLeft: 32, borderLeft: '1px solid var(--border-subtle)' }}>
+                <div style={{ textAlign: 'center', padding: '12px 24px', background: 'rgba(10, 10, 15, 0.6)', borderRadius: 'var(--radius)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ fontSize: 12, fontFamily: 'Inter, sans-serif', color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600 }}>TOTAL GOLD</div>
+                  <div style={{ fontSize: 24, fontFamily: 'Inter, sans-serif', color: 'var(--gold)', fontWeight: 700 }}>{character.gold}</div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <StreakBadge streak={character.streak} />
-                  <span style={{ fontSize: 14, fontFamily: 'VT323, monospace', color: 'var(--text-dim)' }}>ACTIVE STREAK</span>
+                  <span style={{ fontSize: 13, fontFamily: 'Inter, sans-serif', color: 'var(--text-muted)', fontWeight: 600 }}>ACTIVE STREAK</span>
                 </div>
               </div>
             </div>
